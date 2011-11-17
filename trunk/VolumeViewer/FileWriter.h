@@ -13,9 +13,7 @@ class FileWriter
 
 public:
     FileWriter();
-
-
-    int SaveIsoSurface(vtkPolyData *, char *);
+    int SaveIsoSurface(vtkPolyData *, const char *);
 };
 
 #endif // FILEWRITER_H

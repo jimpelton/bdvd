@@ -27,6 +27,8 @@
 #include "vtkTestUtilities.h"
 
 #include <string>
+#include <strstream>
+#include <ctime>
 
 int ISO_SURFACE = 1;
 
@@ -45,6 +47,9 @@ int DEFAULT_INITIAL_ISO_SLIDER_MAX = 150;
 int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
 int CURRENT_ISO_VALUE = 55;
 
+char *DEFAULT_SAVE_POLYDATA_FNAME = "pdata.vpd";
+int DEFAULT_SAVE_POLYDATA_FNAME_LENGTH = 9;
+
 
 VVMain::VVMain(void)
 {
@@ -60,7 +65,7 @@ VVMain::VVMain(void)
 	drf.fileByteOrder = VV_BIG_ENDIAN;
 	
 	drf.imgRngStart = 1;
-	drf.imgRngEnd = 350;
+	drf.imgRngEnd = 50;
 	drf.dimX = 569;
 	drf.dimY = 595;
 	
@@ -149,6 +154,22 @@ void VVMain::SetIsoValue(int val)
 	isoEdit->setText(QString::number(val));
 }
 
+void VVMain::SavePolyDataForIsoSurface()
+{
+    FileWriter f;
+    const int timeNameLength = 21;
+    char timeName[timeNameLength];  //MMDD_HHMM_pdata.vpd
+    
+    time_t theTime = time(0);
+    tm * now = localtime(&theTime);
+    strftime(timeName, timeNameLength*sizeof(char), "%m%d_%H%M%S_", now);  //MMDD_HHMM_
+    
+   std::string name;
+   name.append(timeName);
+   name.append(DEFAULT_SAVE_POLYDATA_FNAME);
+
+    f.SaveIsoSurface(viewer->GetPolyData(), name.c_str());
+}
 
 /*
  *	SLOT.

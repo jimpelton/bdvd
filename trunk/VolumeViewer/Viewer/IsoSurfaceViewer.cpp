@@ -47,35 +47,17 @@ int IsoSurfaceViewer::Setup()
     reader->SetDataScalarTypeToUnsignedChar();
     reader->SetDataByteOrderToBigEndian();
 
-    //voiExtractor = vtkSmartPointer<vtkExtractVOI>::New();
-    //voiExtractor->SetInputConnection( reader->GetOutputPort() );
-    //voiExtractor->SetVOI( 100,569, 100,595, 1,350 );
-    //voiExtractor->SetSampleRate( 1,1,1 );
 
-
-
-/*    extractor = vtkSmartPointer<vtkMarchingCubes>::New();
+    extractor = vtkSmartPointer<vtkMarchingCubes>::New();
     vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
-    pMCubes->SetInputConnection(voiExtractor->GetOutputPort());
+    pMCubes->SetInputConnection(reader->GetOutputPort());
     pMCubes->ComputeNormalsOn();
-    pMCubes->SetValue(0, 80); */ 
-
-
-    //conFilter = vtkSmartPointer<vtkPolyDataConnectivityFilter>::New();
-    //conFilter->SetInputConnection(pMCubes->GetOutputPort());
-    //conFilter->SetExtractionModeToAllRegions();
-    //conFilter->ColorRegionsOn();
-    //conFilter->Update();
-
-
-
+    pMCubes->SetValue(0, 80);  
 
     polyDataMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    polyDataMapper->SetInputConnection(conFilter->GetOutputPort());
+    polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     polyDataMapper->ScalarVisibilityOff();
     polyDataMapper->Update();
-
-
 
     surface = vtkSmartPointer<vtkLODActor>::New();
     surface->SetMapper(polyDataMapper);
@@ -146,7 +128,6 @@ void IsoSurfaceViewer::InitializeRenderer()
 vtkPolyData* IsoSurfaceViewer::GetPolyData()
 {
 	vtkMarchingCubes *pMC = vtkMarchingCubes::SafeDownCast(extractor);
-
 	return pMC->GetOutput();
 }
 

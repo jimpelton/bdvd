@@ -113,6 +113,8 @@ void VVGui::SetupUi(QMainWindow *MainWindow)
     QObject::connect( blueSlider,  SIGNAL( valueChanged(int)), MainWindow, SLOT( SetBlueValue(int)) );
     QObject::connect( blueSlider,  SIGNAL( sliderReleased() ), MainWindow, SLOT( RedrawRenderWindow()) );
 
+    QObject::connect( saveCurrentIsoSurfaceButton, SIGNAL( clicked() ), MainWindow, SLOT( SavePolyDataForIsoSurface() ) ) ;
+
     QMetaObject::connectSlotsByName(MainWindow);
 } // setupUi
 

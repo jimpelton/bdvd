@@ -10,7 +10,7 @@ FileWriter::FileWriter()
  *
  * Returns 1 on success, 0 if there was an oops.
  */
-int FileWriter::SaveIsoSurface(vtkPolyData *vpd, char * fname)
+int FileWriter::SaveIsoSurface(vtkPolyData *vpd, const char * fname)
 {
 	vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
 	writer->SetInput(vpd);

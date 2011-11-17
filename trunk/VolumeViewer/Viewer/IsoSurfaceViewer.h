@@ -58,7 +58,7 @@ protected:
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter;
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter2;
 
-    vtkSmartPointer<vtkPoint
+    //vtkSmartPointer<vtkPoint
     
     vtkSmartPointer<vtkLODActor> surface;
     vtkSmartPointer<vtkLODActor> surface2;

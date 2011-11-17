@@ -19,6 +19,7 @@
 #include "VVGui.h"
 #include "DataReaderFormat.h"
 #include "IsoSurfaceViewer.h"
+#include "FileWriter.h"
 
 #include <QtGui/QMainWindow>
 #include <QtCore/QObject>
@@ -57,7 +58,7 @@ public slots:
 	 */
 	void SetIsoValue(int v);
 
-
+    void SavePolyDataForIsoSurface();
 
 	/*
 	 *	Set the red, green or blue color value as an integer from 0-255.
