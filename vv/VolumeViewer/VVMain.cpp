@@ -47,85 +47,82 @@ int DEFAULT_INITIAL_ISO_SLIDER_MAX = 150;
 int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
 int CURRENT_ISO_VALUE = 55;
 
-char *DEFAULT_SAVE_POLYDATA_FNAME = "pdata.vpd";
+char *DEFAULT_SAVE_POLYDATA_FNAME = "pdata.vtk";
 int DEFAULT_SAVE_POLYDATA_FNAME_LENGTH = 9;
 
+VVMain::VVMain(DataReaderFormat readerFormat)
+{
+    drf = readerFormat;
+    init(drf);
+}
 
 VVMain::VVMain(void)
-{
-    surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
-
-	this->SetupUi(this);
-	
-	drf = DataReaderFormat();
-
-	drf.readerType = VV_MULTI_BMP_READER;
-	drf.filePrefix = "./data/fetus/fetus-00-2_3.5um__rec_voi.bmp";
-	//drf.filePrefix = "./data/embryo/embryo-00-3_3.5um__rec_voi.bmp";
-	drf.fileByteOrder = VV_BIG_ENDIAN;
-	
-	drf.imgRngStart = 1;
-	drf.imgRngEnd = 50;
-	drf.dimX = 569;
-	drf.dimY = 595;
-	
-	drf.nSpacingX = 1;
-	drf.nSpacingY = 1;
-	drf.nSpacingZ = 1;
-	
-	drf.is8Bit = 1;
-
-	if (ISO_SURFACE){
-        printSetup();
-
-		viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
-           CURRENT_ISO_VALUE, IsoSurfaceViewer::CON_FILTER );
-
-		if (!viewer->Setup()){
-			fprintf(stdout, "Setup failed!\n");
-		}
-
-
-        viewer->InitializeRenderer();
-        
-		GetVtkWidget()->SetRenderWindow(viewer->RenWin());
-
-	}else{
-
-		VolumeViewer vv(drf, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
-		//setup initial transfer functions.
-		vv.SetColorTransFunc(0 ,  0.0, 0.0, 0.0);
-		vv.SetColorTransFunc(64,  1.0, 0.5, 0.3);
-		vv.SetColorTransFunc(100, 1.0, 0.5, 0.3);
-		vv.SetColorTransFunc(255, 1.0, 1.0, 0.9);
-
-		vv.SetScalarTransFunc(0,   0.00);
-		vv.SetScalarTransFunc(80,  0.15);
-		vv.SetScalarTransFunc(100, 0.60);
-		vv.SetScalarTransFunc(255, 0.85);
-
-		vv.SetGradientTransFunc(0,   0.0 );
-		vv.SetGradientTransFunc(50,  0.8 );
-		vv.SetGradientTransFunc(100, 1.0 );
-
-
-		if (!vv.Setup()) {
-			fprintf(stdout, "Setup failed!\n");
-		}
-		vv.InitializeRenderer();
-		GetVtkWidget()->SetRenderWindow(vv.RenWin());
-
-	}
-}
+{}
 
 
 VVMain::~VVMain(void)
 {
 }
 
+void VVMain::init(DataReaderFormat drf)
+{
+
+    surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
+
+    
+    //figure out what kind of files we're using.
+   
+    this->SetupUi(this, drf);
+
+    if (ISO_SURFACE){
+        printSetup();
+
+        viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
+            CURRENT_ISO_VALUE, IsoSurfaceViewer::CON_FILTER );
+
+        if (!viewer->Setup()){
+            fprintf(stdout, "Setup failed!\n");
+        }
+
+        viewer->InitializeRenderer();        
+        GetVtkWidget()->SetRenderWindow(viewer->RenWin());
+
+    }else{
+
+        VolumeViewer vv(drf, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
+        //setup initial transfer functions.
+        vv.SetColorTransFunc(0 ,  0.0, 0.0, 0.0);
+        vv.SetColorTransFunc(64,  1.0, 0.5, 0.3);
+        vv.SetColorTransFunc(100, 1.0, 0.5, 0.3);
+        vv.SetColorTransFunc(255, 1.0, 1.0, 0.9);
+
+        vv.SetScalarTransFunc(0,   0.00);
+        vv.SetScalarTransFunc(80,  0.15);
+        vv.SetScalarTransFunc(100, 0.60);
+        vv.SetScalarTransFunc(255, 0.85);
+
+        vv.SetGradientTransFunc(0,   0.0 );
+        vv.SetGradientTransFunc(50,  0.8 );
+        vv.SetGradientTransFunc(100, 1.0 );
+
+
+        if (!vv.Setup()) {
+            fprintf(stdout, "Setup failed!\n");
+        }
+        vv.InitializeRenderer();
+        GetVtkWidget()->SetRenderWindow(vv.RenWin());
+    }
+}
+
+
 void VVMain::printSetup()
 {
-    fprintf(stdout, "\nUsing these *initial* settings: \n\tFilePrefix: %s\n\tDimensions: %d, %d\n\tImage Range: %d-%d\n",
+    fprintf(stdout, "\nUsing these *initial* settings: \n" \
+        "\tFileName: %s\n" \
+        "\tFilePrefix: %s\n" \
+        "\tDimensions: %d, %d\n" \
+        "\tImage Range: %d-%d\n",
+        drf.fileName,
         drf.filePrefix, 
         drf.dimX, drf.dimY, 
         drf.imgRngStart, drf.imgRngEnd);
@@ -168,8 +165,15 @@ void VVMain::SavePolyDataForIsoSurface()
    name.append(timeName);
    name.append(DEFAULT_SAVE_POLYDATA_FNAME);
 
-    f.SaveIsoSurfacePolyData(viewer->GetPolyData(), name.c_str());
+   int ecode = f.SaveIsoSurfacePolyData(viewer->GetPolyData(), name.c_str());
+    
 }
+
+void VVMain::ReadPolyDataForIsoSurface()
+{
+
+}
+
 
 /*
  *	SLOT.

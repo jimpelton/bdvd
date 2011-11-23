@@ -40,6 +40,8 @@ private:
     double surfaceColor[3];
 
 
+    void init(DataReaderFormat drf);
+
 	//calculate initial iso value based off histogram
 	//currently returns a constant value of 85.
 	int calcInitialIsoValue();
@@ -48,6 +50,7 @@ private:
 
 public:
 	VVMain(void);
+    VVMain(DataReaderFormat drf);
 	~VVMain(void);
 
 
@@ -59,6 +62,8 @@ public slots:
 	void SetIsoValue(int v);
 
     void SavePolyDataForIsoSurface();
+
+    void ReadPolyDataForIsoSurface();
 
 	/*
 	 *	Set the red, green or blue color value as an integer from 0-255.

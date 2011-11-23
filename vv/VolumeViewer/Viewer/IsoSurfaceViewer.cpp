@@ -1,13 +1,16 @@
-
+/********************************************************************
+	created:	21:11:2011   9:49
+	filename: 	C:\Users\jim\Documents\programming\VTK\bdvd\vv\VolumeViewer\Viewer\IsoSurfaceViewer.cpp
+	author:		Jim Pelton
+	
+	purpose:	
+*********************************************************************/
 
 
 #include "IsoSurfaceViewer.h"
 
 
-IsoSurfaceViewer::IsoSurfaceViewer(void)
-{
-
-}
+IsoSurfaceViewer::IsoSurfaceViewer(void){}
 
 
 IsoSurfaceViewer::IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int screenheight,
@@ -28,34 +31,42 @@ IsoSurfaceViewer::~IsoSurfaceViewer(void)
 int IsoSurfaceViewer::Setup()
 {
     fprintf(stdout, "Setup...\n");
-
-    reader = vtkSmartPointer<vtkBMPReader>::New();
-    reader->SetFilePrefix(m_readerFormat.filePrefix);
-    reader->SetAllow8BitBMP(m_readerFormat.is8Bit);
-
-    reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
-    reader->SetDataExtent( 0, m_readerFormat.dimX,
-                           0, m_readerFormat.dimY,
-                           m_readerFormat.imgRngStart,
-                           m_readerFormat.imgRngEnd);
-
-    /*reader->SetDataSpacing(m_readerFormat.nSpacingX,
-         m_readerFormat.nSpacingY,
-         m_readerFormat.nSpacingZ);*/
-
-    reader->SetDataOrigin(0.,0.,0.);
-    reader->SetDataScalarTypeToUnsignedChar();
-    reader->SetDataByteOrderToBigEndian();
-
-
-    extractor = vtkSmartPointer<vtkMarchingCubes>::New();
-    vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
-    pMCubes->SetInputConnection(reader->GetOutputPort());
-    pMCubes->ComputeNormalsOn();
-    pMCubes->SetValue(0, 80);  
-
     polyDataMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    polyDataMapper->SetInputConnection(extractor->GetOutputPort());
+
+    if (m_readerFormat.readerType == VV_POLY_DATA_READER )
+    {
+        vtkPolyDataReader *vpdr = vtkPolyDataReader::New();
+        vpdr->SetFileName(m_readerFormat.fileName);        
+        polyDataMapper->SetInput(vpdr->GetOutput());
+    }
+    else{
+        reader = vtkSmartPointer<vtkBMPReader>::New();
+        reader->SetFilePrefix(m_readerFormat.filePrefix);
+        reader->SetAllow8BitBMP(m_readerFormat.is8Bit);
+
+        reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
+        reader->SetDataExtent( 0, m_readerFormat.dimX,
+            0, m_readerFormat.dimY,
+            m_readerFormat.imgRngStart,
+            m_readerFormat.imgRngEnd);
+
+        /*reader->SetDataSpacing(m_readerFormat.nSpacingX,
+        m_readerFormat.nSpacingY,
+        m_readerFormat.nSpacingZ);*/
+
+        reader->SetDataOrigin(0.,0.,0.);
+        reader->SetDataScalarTypeToUnsignedChar();
+        reader->SetDataByteOrderToBigEndian();
+
+        extractor = vtkSmartPointer<vtkMarchingCubes>::New();
+        vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
+        pMCubes->SetInputConnection(reader->GetOutputPort());
+        pMCubes->ComputeNormalsOn();
+        pMCubes->SetValue(0, 80);  
+    
+        polyDataMapper->SetInputConnection(extractor->GetOutputPort());
+    }
+    
     polyDataMapper->ScalarVisibilityOff();
     polyDataMapper->Update();
 
@@ -66,7 +77,6 @@ int IsoSurfaceViewer::Setup()
     surface->GetProperty()->SetOpacity(0.3);
 
     m_surfaceColor[0] = m_surfaceColor[1] = m_surfaceColor[2] = 1.f;
-
 
     return 1;
 }
@@ -103,7 +113,6 @@ void IsoSurfaceViewer::InitializeRenderer()
     fprintf(stdout, "Init renderer...\n");
 
     m_ren->AddActor(surface);
-    m_ren->AddActor(surface2);
 
     double *c = surface->GetCenter();
     m_camera->SetFocalPoint(0.,0.,0.);

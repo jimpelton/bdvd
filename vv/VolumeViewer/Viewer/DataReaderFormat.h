@@ -15,7 +15,11 @@
 
 enum DataReaderType
 {
-	VV_VOLUME_16_READER, STRUCTURED_POINTS_READER, VV_RAW_IMG_READER, VV_MULTI_BMP_READER
+	VV_VOLUME_16_READER, 
+    STRUCTURED_POINTS_READER, 
+    VV_RAW_IMG_READER, 
+    VV_MULTI_BMP_READER,
+    VV_POLY_DATA_READER
 };
 
 enum ByteOrderType
@@ -31,7 +35,7 @@ struct DataReaderFormat
 	int imgRngStart;
 	int imgRngEnd;
 	ByteOrderType fileByteOrder;
-	char * filePrefix;
+    char * filePrefix;
 	char * fileName;
 	int nSpacingX;
 	int nSpacingY;
