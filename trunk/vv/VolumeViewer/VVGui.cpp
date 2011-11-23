@@ -28,7 +28,7 @@ QVTKWidget* VVGui::GetVtkWidget()
 
 
 
-void VVGui::SetupUi(QMainWindow *MainWindow)
+void VVGui::SetupUi(QMainWindow *MainWindow, DataReaderFormat &drf)
 {
     if (MainWindow->objectName().isEmpty())
         MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
@@ -66,7 +66,7 @@ void VVGui::SetupUi(QMainWindow *MainWindow)
     setupColorSliders();
     leftVerticalLayout->addLayout(gridLayout);
     leftColorIsoFrame->setLayout(leftVerticalLayout);
-
+    isoSlider->setDisabled( drf.readerType == VV_POLY_DATA_READER );
 
     centralWidgetHBoxLayout->addWidget(leftColorIsoFrame);
 
@@ -206,7 +206,7 @@ void VVGui::setupColorSliders()
     isoEdit->setFixedWidth(35);
     isoEdit->setText(QString::number(CURRENT_ISO_VALUE));
     gridLayout->addWidget(isoEdit, 3,2);
-
+    
     //iso stuff
    alphaLabel = new QLabel();
    alphaLabel->setObjectName(QString::fromUtf8("isoLabel"));

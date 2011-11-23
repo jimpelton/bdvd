@@ -13,6 +13,8 @@
 #define ISOSURFACEVIEWER_H_
 
 #include "Viewer.h"
+#include "../FileWriter.h"
+
 #include <vtkSmartPointer.h>
 #include <vtkBMPReader.h>
 #include <vtkMarchingCubes.h>
@@ -20,10 +22,10 @@
 #include <vtkExtractVOI.h>
 #include <vtkPolyDataConnectivityFilter.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkPolyDataReader.h>
 #include <vtkLODActor.h>
 #include <vtkProperty.h>
 #include <vtkAlgorithmOutput.h>
-//#include <vtkDecimatePro.h>
 #include <vtkAppendPolyData.h>
 #include <vtkDataSetMapper.h>
 
@@ -44,24 +46,11 @@ protected:
 	
 	vtkSmartPointer<vtkBMPReader> reader;
 	vtkSmartPointer<vtkPolyDataAlgorithm> extractor;
-    vtkSmartPointer<vtkPolyDataAlgorithm> extractor2;
-
-	
 	vtkSmartPointer<vtkPolyDataMapper> polyDataMapper;
-    vtkSmartPointer<vtkPolyDataMapper> polyDataMapper2;
-
     vtkSmartPointer<vtkExtractVOI> voiExtractor;
-    vtkSmartPointer<vtkExtractVOI> voiExtractor2;
-    
     vtkSmartPointer<vtkAppendPolyData> appendFilter;
-
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter;
-    vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter2;
-
-    //vtkSmartPointer<vtkPoint
-    
     vtkSmartPointer<vtkLODActor> surface;
-    vtkSmartPointer<vtkLODActor> surface2;
 
 	
 public:
