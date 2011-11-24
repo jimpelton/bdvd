@@ -87,30 +87,6 @@ void VVMain::init(DataReaderFormat drf)
         viewer->InitializeRenderer();        
         GetVtkWidget()->SetRenderWindow(viewer->RenWin());
 
-    }else{
-
-        VolumeViewer vv(drf, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
-        //setup initial transfer functions.
-        vv.SetColorTransFunc(0 ,  0.0, 0.0, 0.0);
-        vv.SetColorTransFunc(64,  1.0, 0.5, 0.3);
-        vv.SetColorTransFunc(100, 1.0, 0.5, 0.3);
-        vv.SetColorTransFunc(255, 1.0, 1.0, 0.9);
-
-        vv.SetScalarTransFunc(0,   0.00);
-        vv.SetScalarTransFunc(80,  0.15);
-        vv.SetScalarTransFunc(100, 0.60);
-        vv.SetScalarTransFunc(255, 0.85);
-
-        vv.SetGradientTransFunc(0,   0.0 );
-        vv.SetGradientTransFunc(50,  0.8 );
-        vv.SetGradientTransFunc(100, 1.0 );
-
-
-        if (!vv.Setup()) {
-            fprintf(stdout, "Setup failed!\n");
-        }
-        vv.InitializeRenderer();
-        GetVtkWidget()->SetRenderWindow(vv.RenWin());
     }
 }
 
@@ -121,11 +97,15 @@ void VVMain::printSetup()
         "\tFileName: %s\n" \
         "\tFilePrefix: %s\n" \
         "\tDimensions: %d, %d\n" \
-        "\tImage Range: %d-%d\n",
+        "\tImage Range: %d-%d\n" \
+        "\tIs8bit: %s\n" \
+        "\tByte order: %s\n",
         drf.fileName,
         drf.filePrefix, 
         drf.dimX, drf.dimY, 
-        drf.imgRngStart, drf.imgRngEnd);
+        drf.imgRngStart, drf.imgRngEnd,
+        drf.is8Bit == 0 ? "No" : "Yes", 
+        drf.fileByteOrder == VV_BIG_ENDIAN ? "BIG ENDIAN" : "LITTLE ENDIAN");
     fprintf(stdout, "\n\tISO VALUE: %d\n", CURRENT_ISO_VALUE);
 }
 

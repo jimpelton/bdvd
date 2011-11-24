@@ -39,30 +39,29 @@ int IsoSurfaceViewer::Setup()
         vpdr->SetFileName(m_readerFormat.fileName);        
         polyDataMapper->SetInput(vpdr->GetOutput());
     }
-    else{
+    else
+    {
         reader = vtkSmartPointer<vtkBMPReader>::New();
         reader->SetFilePrefix(m_readerFormat.filePrefix);
         reader->SetAllow8BitBMP(m_readerFormat.is8Bit);
 
         reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
         reader->SetDataExtent( 0, m_readerFormat.dimX,
-            0, m_readerFormat.dimY,
-            m_readerFormat.imgRngStart,
-            m_readerFormat.imgRngEnd);
-
-        /*reader->SetDataSpacing(m_readerFormat.nSpacingX,
-        m_readerFormat.nSpacingY,
-        m_readerFormat.nSpacingZ);*/
+                           0, m_readerFormat.dimY,
+                           m_readerFormat.imgRngStart,
+                           m_readerFormat.imgRngEnd);
 
         reader->SetDataOrigin(0.,0.,0.);
         reader->SetDataScalarTypeToUnsignedChar();
         reader->SetDataByteOrderToBigEndian();
+        //reader->Update();
 
         extractor = vtkSmartPointer<vtkMarchingCubes>::New();
         vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
         pMCubes->SetInputConnection(reader->GetOutputPort());
         pMCubes->ComputeNormalsOn();
-        pMCubes->SetValue(0, 80);  
+        pMCubes->SetValue(0, CURRENT_ISO_VALUE); 
+        //pMCubes->Update();
     
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     }

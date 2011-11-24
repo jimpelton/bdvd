@@ -14,6 +14,7 @@
 
 #include "Viewer.h"
 #include "../FileWriter.h"
+#include "../Common.h"
 
 #include <vtkSmartPointer.h>
 #include <vtkBMPReader.h>
