@@ -33,13 +33,60 @@ int main(int argc, char* argv[])
 
         if (argc > 1){
             int argcnt = 1;
-            if ( strcmp(argv[argcnt], "--polyfile") ){
-                drf.readerType = VV_POLY_DATA_READER;
-                drf.fileName = argv[argcnt+1];
-                drf.filePrefix = "unknown";
+            while (argcnt < argc){
+                if ( strcmp(argv[argcnt], "--polyfile")==0 )
+                {
+                    drf.readerType = VV_POLY_DATA_READER;
+                    drf.fileName = argv[argcnt+1];
+                    drf.filePrefix = "unknown";
+                    argcnt+=2;
+                }
+                else if (strcmp(argv[argcnt], "--bmpprefix") == 0)
+                {
+                    drf.readerType = VV_MULTI_BMP_READER;
+                    drf.filePrefix = argv[argcnt+1];
+                    drf.fileName = "unknown";
+                    argcnt+=2;
+                    
+                    int bmpArgsCnt = 0;
+                    while (argcnt < argc)
+                    {
+                        if (strcmp(argv[argcnt], "--xsize") == 0)
+                        {
+                            drf.dimX = atoi(argv[argcnt+1]);
+                            argcnt+=2; bmpArgsCnt++;
+                        }
+                        else if (strcmp(argv[argcnt], "--ysize") == 0)
+                        {
+                            drf.dimY = atoi(argv[argcnt+1]);
+                            argcnt+=2; bmpArgsCnt++;
+                        }
+                        
+                        else if (strcmp(argv[argcnt], "--imgend") == 0)
+                        {
+                            drf.imgRngEnd = atoi(argv[argcnt+1]);
+                            argcnt+=2; bmpArgsCnt++;
+                        }
+                        else if (strcmp(argv[argcnt], "--imgstart") == 0)
+                        {
+                            drf.imgRngStart = atoi(argv[argcnt+1]);
+                            argcnt+=2;  bmpArgsCnt++;
+                        }
+                        else if (strcmp(argv[argcnt], "--use8bit") == 0)
+                        {
+                            drf.is8Bit = 1;
+                            argcnt += 1; bmpArgsCnt++;
+                        }
+                    }
+                }
             }
-
-        }else{
+            drf.nSpacingX = 1;
+            drf.nSpacingY = 1;
+            drf.nSpacingZ = 1;
+            drf.fileByteOrder = VV_BIG_ENDIAN;
+        }
+        else
+        {
             drf.readerType = VV_MULTI_BMP_READER;
             drf.filePrefix = "./data/fetus/fetus-00-2_3.5um__rec_voi.bmp";
             drf.fileName = "unknown";
@@ -57,6 +104,8 @@ int main(int argc, char* argv[])
 
             drf.is8Bit = 1;
         }
+        
+        
             
         VVMain gui(drf);
         gui.show();
