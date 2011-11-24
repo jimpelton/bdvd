@@ -208,9 +208,9 @@ void VVGui::setupColorSliders()
     gridLayout->addWidget(isoEdit, 3,2);
     
     //iso stuff
-   alphaLabel = new QLabel();
-   alphaLabel->setObjectName(QString::fromUtf8("isoLabel"));
-   alphaLabel->setText(QString("ISO Val:"));
+    alphaLabel = new QLabel();
+    alphaLabel->setObjectName(QString::fromUtf8("isoLabel"));
+    alphaLabel->setText(QString("ISO Val:"));
     gridLayout->addWidget(alphaLabel, 4, 0);
 
     alphaSlider = new QSlider();

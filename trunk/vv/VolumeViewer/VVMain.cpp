@@ -84,12 +84,22 @@ void VVMain::init(DataReaderFormat drf)
             fprintf(stdout, "Setup failed!\n");
         }
 
-        viewer->InitializeRenderer();        
-        GetVtkWidget()->SetRenderWindow(viewer->RenWin());
+//        viewer->InitializeRenderer();   
+//        GetVtkWidget()->SetRenderWindow(viewer->RenWin());
+//        viewer->Iren()->Initialize();
+           
 
     }
 }
 
+void VVMain::InitializeRenderer()
+{
+     viewer->InitializeRenderer();   
+     GetVtkWidget()->SetRenderWindow(viewer->RenWin());
+     //viewer->Iren()->SetRenderWindow(viewer->RenWin());
+     //viewer->Iren()->Initialize();
+     
+}
 
 void VVMain::printSetup()
 {

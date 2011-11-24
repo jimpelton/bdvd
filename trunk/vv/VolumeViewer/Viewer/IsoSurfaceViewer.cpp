@@ -105,7 +105,7 @@ vtkAlgorithmOutput *IsoSurfaceViewer::getAlgoOutput()
  *	Make everything ready to render. Adds actor to the renderer,
  *  sets up the camera, update rate, camera position.
  *  Does nothing to read data. 
- *  To set up the pipeline call Setup() before InitializeRenderer().
+ *  To set up the pipeline call IsoSurfaceViewer::Setup() before InitializeRenderer().
  */
 void IsoSurfaceViewer::InitializeRenderer()
 {
@@ -129,10 +129,9 @@ void IsoSurfaceViewer::InitializeRenderer()
     m_ren->ResetCameraClippingRange();
 
 
-    m_iren->SetDesiredUpdateRate(10.0);
-
-    m_iren->Initialize();
 }
+
+
 
 vtkPolyData* IsoSurfaceViewer::GetPolyData()
 {

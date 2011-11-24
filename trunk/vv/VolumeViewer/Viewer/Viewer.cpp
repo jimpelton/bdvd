@@ -50,8 +50,8 @@ int Viewer::setup(){
     m_renWin->AddRenderer(m_ren);
 
     m_iren = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    m_iren->SetRenderWindow(m_renWin);
-    m_iren->SetInteractorStyle(vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New());
+    //m_iren->SetRenderWindow(m_renWin);
+    //m_iren->SetInteractorStyle(vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New());
 
     m_camera = vtkSmartPointer<vtkCamera>::New();
     m_ren->SetActiveCamera(m_camera);
@@ -145,6 +145,7 @@ void Viewer::RenWin( vtkSmartPointer<vtkRenderWindow> val )
 {
     m_renWin = val;
 }
+
 
 /*
 *  Start the render loop.

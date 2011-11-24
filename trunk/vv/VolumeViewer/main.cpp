@@ -17,12 +17,20 @@
 #include <math.h>
 
 
-void parseCMD(int argc, char *argv[])
+void printUsage()
 {
+    char *s = 
+        "VolumeViewer Usage\n" \
+        "\tVolumeViewer --polyfile <file-name>\n" \
+        "\tVolumeViewer --bmpprefix <file-prefix>\n" \
+        "\t\t--xsize <size> --ysize <size> --zsize <size>\n" \
+        "\t\t--imgstart --imgend --is8bit\n\n" \
+        "\tNote: <file-prefix> is an absolute path plus the common naming of each file at that path.\n" \
+        "\tExample: --bmpprefix C:\data\fetus\fetus.bmp where each bmp file is appended with number.\n" \
+        "";
 
+    fprintf(stdout, "%s", s);
 }
-
-
 
 int main(int argc, char* argv[])
 {
@@ -33,7 +41,13 @@ int main(int argc, char* argv[])
 
         if (argc > 1){
             int argcnt = 1;
+            if (strcmp(argv[argcnt], "--help") == 0)
+            {
+                printUsage();
+                return 0;
+            }
             while (argcnt < argc){
+                
                 if ( strcmp(argv[argcnt], "--polyfile")==0 )
                 {
                     drf.readerType = VV_POLY_DATA_READER;
@@ -108,6 +122,7 @@ int main(int argc, char* argv[])
         
             
         VVMain gui(drf);
+        gui.InitializeRenderer();
         gui.show();
         app.exec();
 
