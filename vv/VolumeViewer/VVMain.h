@@ -52,7 +52,8 @@ public:
 	VVMain(void);
     VVMain(DataReaderFormat drf);
 	~VVMain(void);
-
+        
+        void InitializeRenderer();
 
 public slots:
 

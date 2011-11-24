@@ -45,9 +45,9 @@ private:
 
 protected:
 	
-	vtkSmartPointer<vtkBMPReader> reader;
-	vtkSmartPointer<vtkPolyDataAlgorithm> extractor;
-	vtkSmartPointer<vtkPolyDataMapper> polyDataMapper;
+    vtkSmartPointer<vtkBMPReader> reader;
+    vtkSmartPointer<vtkPolyDataAlgorithm> extractor;
+    vtkSmartPointer<vtkPolyDataMapper> polyDataMapper;
     vtkSmartPointer<vtkExtractVOI> voiExtractor;
     vtkSmartPointer<vtkAppendPolyData> appendFilter;
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter;

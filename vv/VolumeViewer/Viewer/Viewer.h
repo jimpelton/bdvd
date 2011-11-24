@@ -89,6 +89,7 @@ public:
 
 	vtkSmartPointer<vtkRenderWindow> RenWin() const;
 	void RenWin(vtkSmartPointer<vtkRenderWindow> val);
+        
 	
 };
 #endif
