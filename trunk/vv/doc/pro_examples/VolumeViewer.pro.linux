@@ -5,9 +5,9 @@
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += . Surface Viewer
-INCLUDEPATH += . Viewer Surface /usr/local/vtk-5.8/include/vtk-5.8/
+INCLUDEPATH += . Viewer Surface /usr/local/include/vtk-5.8/
 
-LIBS += -L/usr/local/vtk-5.8/lib/vtk-5.8/ \
+LIBS += -L/usr/local/lib/vtk-5.8/ \
                -lQVTK \
 			   -lvtkWidgets \
 			   -lvtkVolumeRendering \

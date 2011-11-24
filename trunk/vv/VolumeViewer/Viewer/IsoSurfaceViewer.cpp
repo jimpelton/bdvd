@@ -26,7 +26,8 @@ IsoSurfaceViewer::~IsoSurfaceViewer(void)
 {}
 
 /*
- *	Setup the vtk pipeline, the marching cubes extractor, etc.
+ *  Setup the vtk pipeline, the marching cubes extractor, etc.
+ *  Chooses the correct reader from the DataReaderFormat.
  */
 int IsoSurfaceViewer::Setup()
 {
