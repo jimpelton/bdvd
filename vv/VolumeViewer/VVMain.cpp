@@ -131,6 +131,12 @@ void VVMain::SetIsoValue(int val)
 	isoEdit->setText(QString::number(val));
 }
 
+
+/**
+ *    SLOt.
+ * 
+ * Called when saving a polydata file with the gui.
+ */
 void VVMain::SavePolyDataForIsoSurface()
 {
     FileWriter f;
@@ -149,6 +155,11 @@ void VVMain::SavePolyDataForIsoSurface()
     
 }
 
+/*
+ * SLOT.
+ * 
+ * Called when opening a poly data file with the GUI
+ */
 void VVMain::ReadPolyDataForIsoSurface()
 {
 
@@ -203,5 +214,5 @@ void VVMain::RedrawRenderWindow()
 {
     viewer->SetColorRGB(surfaceColor);
     viewer->IsoValue(isoValue);
-	viewer->Refresh();
+    viewer->Refresh();
 }
