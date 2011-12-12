@@ -38,7 +38,7 @@ private:
     
 
 	int m_iso_value;
-	double m_surfaceColor[3];
+	double m_surfaceColor[4];
     int m_algorithm;
    
     vtkAlgorithmOutput *getAlgoOutput();

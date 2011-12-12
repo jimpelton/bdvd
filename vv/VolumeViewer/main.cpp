@@ -13,23 +13,28 @@
 #include "DataReaderFormat.h"
 
 #include <QtGui/QApplication>
+#include <stdlib.h>
 #include <string>
 #include <math.h>
 
 
-void printUsage()
+void printUsage(char *extraMessage = NULL)
 {
     char *s = 
         "VolumeViewer Usage\n" \
         "\tVolumeViewer --polyfile <file-name>\n" \
         "\tVolumeViewer --bmpprefix <file-prefix>\n" \
-        "\t\t--xsize <size> --ysize <size> --zsize <size>\n" \
-        "\t\t--imgstart --imgend --is8bit\n\n" \
+        "\t\t--xsize <size> --ysize <size>\n" \
+        "\t\t--imgstart --imgend [--use8bit]\n\n" \
         "\tNote: <file-prefix> is an absolute path plus the common naming of each file at that path.\n" \
         "\tExample: --bmpprefix C:\data\fetus\fetus.bmp where each bmp file is appended with number.\n" \
         "";
 
     fprintf(stdout, "%s", s);
+    if (extraMessage != NULL)
+    {
+        fprintf(stdout, "\n\n %s", s);
+    }
 }
 
 int main(int argc, char* argv[])
@@ -37,7 +42,7 @@ int main(int argc, char* argv[])
 
         QApplication app(argc, argv);
         char *file;
-        DataReaderFormat drf;
+        DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
 
         if (argc > 1){
             int argcnt = 1;
@@ -47,7 +52,7 @@ int main(int argc, char* argv[])
                 return 0;
             }
             while (argcnt < argc){
-                
+                fprintf(stdout, "Reading commands...\n");
                 if ( strcmp(argv[argcnt], "--polyfile")==0 )
                 {
                     drf.readerType = VV_POLY_DATA_READER;
@@ -91,7 +96,19 @@ int main(int argc, char* argv[])
                             drf.is8Bit = 1;
                             argcnt += 1; bmpArgsCnt++;
                         }
+//                         else if (strcmp(argv[argcnt], "--byteOrder"))
+//                         {
+//                             drf.fileByteOrder = atoi(argv[argcnt+1]);
+//                             argcnt += 1; bmpArgsCnt++;
+//                         }
                     }
+                }
+                else
+                {
+                    char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments.\n" \
+                                         "If --bmpprefix you need at least --xsize, --ysize, --imgend, --imgstart.\n";
+                    printUsage(extraMessage);
+                    return 0;
                 }
             }
             drf.nSpacingX = 1;
@@ -101,26 +118,13 @@ int main(int argc, char* argv[])
         }
         else
         {
-            drf.readerType = VV_MULTI_BMP_READER;
-            drf.filePrefix = "./data/fetus/fetus-00-2_3.5um__rec_voi.bmp";
-            drf.fileName = "unknown";
-            //drf.filePrefix = "./data/embryo/embryo-00-3_3.5um__rec_voi.bmp";
-            drf.fileByteOrder = VV_BIG_ENDIAN;
-
-            drf.imgRngStart = 1;
-            drf.imgRngEnd = 350;
-            drf.dimX = 569;
-            drf.dimY = 595;
-
-            drf.nSpacingX = 1;
-            drf.nSpacingY = 1;
-            drf.nSpacingZ = 1;
-
-            drf.is8Bit = 1;
+            char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments." \
+                "If --bmpprefix you need at least --xsize, --ysize, --imgend, --imgstart.\n";
+            printUsage(extraMessage);
         }
         
         
-            
+        fprintf(stdout, "Starting GUI...\n");
         VVMain gui(drf);
         gui.InitializeRenderer();
         gui.show();

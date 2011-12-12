@@ -19,6 +19,7 @@ IsoSurfaceViewer::IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int 
 {
     m_iso_value = iso_val;
     m_algorithm = algorithm;
+    m_surfaceColor[0] = m_surfaceColor[1] = m_surfaceColor[2] = m_surfaceColor[3] = 1.f;
 }
 
 
@@ -37,7 +38,8 @@ int IsoSurfaceViewer::Setup()
     if (m_readerFormat.readerType == VV_POLY_DATA_READER )
     {
         vtkPolyDataReader *vpdr = vtkPolyDataReader::New();
-        vpdr->SetFileName(m_readerFormat.fileName);        
+        vpdr->SetFileName(m_readerFormat.fileName); 
+        vpdr->Update();
         polyDataMapper->SetInput(vpdr->GetOutput());
     }
     else
@@ -61,7 +63,7 @@ int IsoSurfaceViewer::Setup()
         vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
         pMCubes->SetInputConnection(reader->GetOutputPort());
         pMCubes->ComputeNormalsOn();
-        pMCubes->SetValue(0, CURRENT_ISO_VALUE); 
+        pMCubes->SetValue(0, m_iso_value); 
         //pMCubes->Update();
     
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
@@ -73,10 +75,8 @@ int IsoSurfaceViewer::Setup()
     surface = vtkSmartPointer<vtkLODActor>::New();
     surface->SetMapper(polyDataMapper);
     vtkLODActor::SafeDownCast(surface)->SetNumberOfCloudPoints(100000);
-    surface->GetProperty()->SetColor(0.4,0.3,0.3);
-    surface->GetProperty()->SetOpacity(0.3);
-
-    m_surfaceColor[0] = m_surfaceColor[1] = m_surfaceColor[2] = 1.f;
+    surface->GetProperty()->SetColor(m_surfaceColor[0], m_surfaceColor[1], m_surfaceColor[2]);
+    surface->GetProperty()->SetOpacity(m_surfaceColor[3]);
 
     return 1;
 }
@@ -127,11 +127,12 @@ void IsoSurfaceViewer::InitializeRenderer()
     m_renWin->SetSize(ScreenWidth(), ScreenHeight());
 
     m_ren->ResetCameraClippingRange();
+    
+
+    fprintf(stdout, "Done initializing render...\n");
 
 
 }
-
-
 
 vtkPolyData* IsoSurfaceViewer::GetPolyData()
 {
