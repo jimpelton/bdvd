@@ -75,18 +75,14 @@ void VVMain::init(DataReaderFormat drf)
     this->SetupUi(this, drf);
 
     if (ISO_SURFACE){
-        printSetup();
-
         viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
             CURRENT_ISO_VALUE, IsoSurfaceViewer::CON_FILTER );
+
+        printSetup();
 
         if (!viewer->Setup()){
             fprintf(stdout, "Setup failed!\n");
         }
-
-//        viewer->InitializeRenderer();   
-//        GetVtkWidget()->SetRenderWindow(viewer->RenWin());
-//        viewer->Iren()->Initialize();
            
 
     }
@@ -96,9 +92,9 @@ void VVMain::InitializeRenderer()
 {
      viewer->InitializeRenderer();   
      GetVtkWidget()->SetRenderWindow(viewer->RenWin());
+     
      //viewer->Iren()->SetRenderWindow(viewer->RenWin());
      //viewer->Iren()->Initialize();
-     
 }
 
 void VVMain::printSetup()
@@ -116,7 +112,7 @@ void VVMain::printSetup()
         drf.imgRngStart, drf.imgRngEnd,
         drf.is8Bit == 0 ? "No" : "Yes", 
         drf.fileByteOrder == VV_BIG_ENDIAN ? "BIG ENDIAN" : "LITTLE ENDIAN");
-    fprintf(stdout, "\n\tISO VALUE: %d\n", CURRENT_ISO_VALUE);
+    fprintf(stdout, "\n\tISO VALUE: %d\n", viewer->IsoValue());
 }
 
 /*
@@ -172,7 +168,7 @@ void VVMain::SavePolyDataForIsoSurface()
  */
 void VVMain::ReadPolyDataForIsoSurface()
 {
-
+    
 }
 
 
@@ -223,6 +219,7 @@ void VVMain::SetBlueValue( int blue )
 void VVMain::RedrawRenderWindow()
 {
     viewer->SetColorRGB(surfaceColor);
-    viewer->IsoValue(isoValue);
+   if (drf.readerType != VV_POLY_DATA_READER)
+        viewer->IsoValue(isoValue);
     viewer->Refresh();
 }

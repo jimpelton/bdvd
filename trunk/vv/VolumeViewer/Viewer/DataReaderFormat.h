@@ -19,22 +19,24 @@ enum DataReaderType
     STRUCTURED_POINTS_READER, 
     VV_RAW_IMG_READER, 
     VV_MULTI_BMP_READER,
-    VV_POLY_DATA_READER
+    VV_POLY_DATA_READER,
+    VV_READER_TYPE_NOT_SET
 };
 
 enum ByteOrderType
 {
-	VV_BIG_ENDIAN = 0, VV_LITTLE_ENDIAN
+	VV_BIG_ENDIAN = 0, VV_LITTLE_ENDIAN, VV_ORDER_NOT_SET
 }; 
 
 struct DataReaderFormat
 {
 	DataReaderType readerType;
+    //int readerType;
 	int dimX;
 	int dimY;
 	int imgRngStart;
 	int imgRngEnd;
-	ByteOrderType fileByteOrder;
+	int fileByteOrder;
     char * filePrefix;
 	char * fileName;
 	int nSpacingX;
