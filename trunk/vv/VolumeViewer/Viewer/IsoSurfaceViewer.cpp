@@ -9,6 +9,8 @@
 
 #include "IsoSurfaceViewer.h"
 
+#define SETUP_SUCCESS 0
+
 
 IsoSurfaceViewer::IsoSurfaceViewer(void){}
 
@@ -46,6 +48,12 @@ int IsoSurfaceViewer::Setup()
     {
         reader = vtkSmartPointer<vtkBMPReader>::New();
         reader->SetFilePrefix(m_readerFormat.filePrefix);
+        reader->Update();
+        int ecode = reader->GetErrorCode();
+        if (ecode != 0){
+            return ecode;
+        }
+
         reader->SetAllow8BitBMP(m_readerFormat.is8Bit);
 
         reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
@@ -78,7 +86,7 @@ int IsoSurfaceViewer::Setup()
     surface->GetProperty()->SetColor(m_surfaceColor[0], m_surfaceColor[1], m_surfaceColor[2]);
     surface->GetProperty()->SetOpacity(m_surfaceColor[3]);
 
-    return 1;
+    return SETUP_SUCCESS;
 }
 
 /*
