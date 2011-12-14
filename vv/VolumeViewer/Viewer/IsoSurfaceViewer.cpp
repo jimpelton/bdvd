@@ -58,9 +58,9 @@ int IsoSurfaceViewer::Setup()
 
         reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
         reader->SetDataExtent( 0, m_readerFormat.dimX,
-                           0, m_readerFormat.dimY,
-                           m_readerFormat.imgRngStart,
-                           m_readerFormat.imgRngEnd);
+                               0, m_readerFormat.dimY,
+                               m_readerFormat.imgRngStart,
+                               m_readerFormat.imgRngEnd);
 
         reader->SetDataOrigin(0.,0.,0.);
         reader->SetDataScalarTypeToUnsignedChar();
