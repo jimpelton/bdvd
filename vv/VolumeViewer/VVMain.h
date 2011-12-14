@@ -62,7 +62,7 @@ public slots:
 	 */
 	void SetIsoValue(int v);
 
-    void SavePolyDataForIsoSurface();
+    int SavePolyDataForIsoSurface();
 
     void ReadPolyDataForIsoSurface();
 

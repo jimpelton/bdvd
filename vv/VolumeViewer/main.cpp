@@ -96,6 +96,11 @@ int main(int argc, char* argv[])
                             drf.is8Bit = 1;
                             argcnt += 1; bmpArgsCnt++;
                         }
+                        else if (strcmp(argv[argcnt], "--isoval") == 0)
+                        {
+                            CURRENT_ISO_VALUE = atoi(argv[argcnt+1]);
+                            argcnt+=2; bmpArgsCnt++;
+                        }
 //                         else if (strcmp(argv[argcnt], "--byteOrder"))
 //                         {
 //                             drf.fileByteOrder = atoi(argv[argcnt+1]);

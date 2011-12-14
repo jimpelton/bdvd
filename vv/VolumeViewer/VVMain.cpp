@@ -27,7 +27,7 @@
 #include "vtkTestUtilities.h"
 
 #include <string>
-#include <strstream>
+#include <sstream>
 #include <ctime>
 
 int ISO_SURFACE = 1;
@@ -69,8 +69,6 @@ void VVMain::init(DataReaderFormat drf)
 
     surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
 
-    
-    //figure out what kind of files we're using.
    
     this->SetupUi(this, drf);
 
@@ -80,7 +78,7 @@ void VVMain::init(DataReaderFormat drf)
 
         printSetup();
 
-        if (!viewer->Setup()){
+        if (viewer->Setup()){
             fprintf(stdout, "Setup failed!\n");
         }
            
@@ -143,7 +141,7 @@ void VVMain::SetIsoValue(int val)
  * 
  * Called when saving a polydata file with the gui.
  */
-void VVMain::SavePolyDataForIsoSurface()
+int VVMain::SavePolyDataForIsoSurface()
 {
     FileWriter f;
     const int timeNameLength = 21;
@@ -151,14 +149,16 @@ void VVMain::SavePolyDataForIsoSurface()
     
     time_t theTime = time(0);
     tm * now = localtime(&theTime);
-    strftime(timeName, timeNameLength*sizeof(char), "%m%d_%H%M%S_", now);  //MMDD_HHMM_
+    strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
     
-   std::string name;
-   name.append(timeName);
-   name.append(DEFAULT_SAVE_POLYDATA_FNAME);
+    std::string s;
+    std::stringstream ss;
+    ss << viewer->IsoValue() << timeName << DEFAULT_SAVE_POLYDATA_FNAME;
+    s = ss.str();
 
-   int ecode = f.SaveIsoSurfacePolyData(viewer->GetPolyData(), name.c_str());
-    
+   int ecode = f.SaveIsoSurfacePolyData(viewer->GetPolyData(), s.c_str());
+   fprintf(stdout, "ecode: %d", ecode);
+   return ecode;
 }
 
 /*
