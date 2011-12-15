@@ -34,3 +34,21 @@ vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
     reader->Delete();
     return data;
 }
+
+int FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
+{
+	vtkWindowToImageFilter *windowToImageFilter = vtkWindowToImageFilter::New();
+	  windowToImageFilter->SetInput(renwin);
+	  windowToImageFilter->SetMagnification(3); //set the resolution of the output image (3 times the current resolution of vtk render window)
+	  windowToImageFilter->SetInputBufferTypeToRGBA(); //also record the alpha (transparency) channel
+	  windowToImageFilter->Update();
+
+	  vtkPNGWriter *writer = vtkPNGWriter::New();
+	  writer->SetFileName(fileName);
+	  writer->SetInput(windowToImageFilter->GetOutput());
+	  writer->Write();
+
+	  windowToImageFilter->Delete();
+	  writer->Delete();
+
+}

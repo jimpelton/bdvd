@@ -131,21 +131,13 @@ void IsoSurfaceViewer::InitializeRenderer()
     m_ren->ResetCamera();
     m_camera->Dolly(1.5);
 
-    m_ren->SetBackground(.1,0.1,0.1);
+    m_ren->SetBackground(0.1,0.1,0.1);
     m_renWin->SetSize(ScreenWidth(), ScreenHeight());
 
     m_ren->ResetCameraClippingRange();
     
 
     fprintf(stdout, "Done initializing render...\n");
-
-
-}
-
-vtkPolyData* IsoSurfaceViewer::GetPolyData()
-{
-	vtkMarchingCubes *pMC = vtkMarchingCubes::SafeDownCast(extractor);
-	return pMC->GetOutput();
 }
 
 /************************************************************************/
@@ -207,5 +199,11 @@ int IsoSurfaceViewer::Algorithm() const
 void IsoSurfaceViewer::Algorithm( int val )
 {
     m_algorithm = val;
+}
+
+vtkPolyData* IsoSurfaceViewer::GetPolyData()
+{
+	vtkMarchingCubes *pMC = vtkMarchingCubes::SafeDownCast(extractor);
+	return pMC->GetOutput();
 }
 

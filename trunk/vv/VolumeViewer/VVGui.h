@@ -34,6 +34,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QCheckBox>
 
 #include <QtGui/QFrame>
 #include <QtGui/QSpacerItem>
@@ -45,7 +46,6 @@
 class VVGui
 {
 private:
-
 
     void setupColorSliders();
 
@@ -60,26 +60,34 @@ public:
     QFormLayout *colorAndIsoSliderFormLayout;
 
     QFrame *leftColorIsoFrame;
-    QLabel *redLabel, *greenLabel, *blueLabel, *isoLabel, *alphaLabel;
 
-    QSlider *redSlider;
-    QSlider *greenSlider;
-    QSlider *blueSlider;
-    QSlider *alphaSlider;
-    QSlider *isoSlider;
+    QLabel *redLabel,
+           *greenLabel,
+           *blueLabel,
+           *isoLabel,
+           *alphaLabel;
+
+    QSlider *redSlider,
+            *greenSlider,
+            *blueSlider,
+            *alphaSlider,
+            *isoSlider;
 
     QLineEdit *redEdit,
-    *greenEdit,
-    *blueEdit,
-    *isoEdit,
-    *alphaEdit;
+              *greenEdit,
+              *blueEdit,
+              *isoEdit,
+              *alphaEdit;
 
     QPushButton *saveCurrentIsoSurfaceButton;
+    QPushButton *saveScreenShotButton;
+
+    QCheckBox  *saveScreenShotWithSurfaceCheckBox;
 
     QSpacerItem *verticalSpacer;
-    QVTKWidget *vtkWidget;
-    QMenuBar *menubar;
-    QStatusBar *statusbar;
+    QVTKWidget  *vtkWidget;
+    QMenuBar    *menubar;
+    QStatusBar  *statusbar;
     
 
 

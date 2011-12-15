@@ -6,6 +6,9 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataWriter.h>
 #include <vtkPolyDataReader.h>
+#include <vtkWindowToImageFilter.h>
+#include <vtkPNGWriter.h>
+#include <vtkRenderWindow.h>
 
 class FileWriter
 {
@@ -13,8 +16,9 @@ class FileWriter
 public:
     FileWriter();
     ~FileWriter();
-    int SaveIsoSurfacePolyData(vtkPolyData *, const char *);
-    vtkPolyData *ReadIsoSurfacePolyData( const char *);
+    int SaveIsoSurfacePolyData(vtkPolyData *data, const char * filename);
+    vtkPolyData *ReadIsoSurfacePolyData( const char * filename);
+    int SaveScreenShot(vtkRenderWindow *renwin, const char* filename);
 };
 
 #endif // FILEWRITER_H

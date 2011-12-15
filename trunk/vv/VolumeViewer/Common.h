@@ -25,10 +25,12 @@ extern int DEFAULT_INITIAL_COLOR_ALPHA    ;
 extern int DEFAULT_INITIAL_ISO_SLIDER_MAX ;
 extern int DEFAULT_INITIAL_ISO_SLIDER_MIN ;
 
-extern int CURRENT_ISO_VALUE              ;
+extern int DEFAULT_ISO_VALUE              ;
 extern int CURRENT_ALGORITHM              ;
 
-extern char * DEFAULT_SAVE_POLYDATA_FNAME  ;
+extern char *DEFAULT_SAVE_POLYDATA_FNAME  ;
 extern int   DEFAULT_SAVE_POLYDATA_FNAME_LENGTH ;
+
+extern char *DEFAULT_SAVE_SCREENSHOT_FNAME;
 
 #endif

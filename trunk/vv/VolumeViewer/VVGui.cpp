@@ -114,6 +114,8 @@ void VVGui::SetupUi(QMainWindow *MainWindow, DataReaderFormat &drf)
     QObject::connect( blueSlider,  SIGNAL( valueChanged(int)), MainWindow, SLOT( SetBlueValue(int)) );
     QObject::connect( blueSlider,  SIGNAL( sliderReleased() ), MainWindow, SLOT( RedrawRenderWindow()) );
 
+    QObject::connect( isoEdit,     SIGNAL( returnPressed() ),  MainWindow, SLOT( RedrawRenderWindow()) );
+
     QObject::connect( saveCurrentIsoSurfaceButton, SIGNAL( clicked() ), MainWindow, SLOT( SavePolyDataForIsoSurface()) ) ;
 
     QMetaObject::connectSlotsByName(MainWindow);
@@ -126,7 +128,7 @@ void VVGui::setupColorSliders()
     //red stuff
     redLabel = new QLabel();
     redLabel->setObjectName(QString::fromUtf8("redLabel"));
-    redLabel->setText(QString("Red:"));
+    redLabel->setText(QString("R:"));
     gridLayout->addWidget(redLabel,0,0);
 
     
@@ -148,7 +150,7 @@ void VVGui::setupColorSliders()
     //green stuff
     greenLabel = new QLabel();
     greenLabel->setObjectName(QString::fromUtf8("greenLabel"));
-    greenLabel->setText(QString("Green:"));
+    greenLabel->setText(QString("G:"));
     gridLayout->addWidget(greenLabel, 1, 0);
 
     greenSlider = new QSlider();
@@ -169,7 +171,7 @@ void VVGui::setupColorSliders()
     //blue stuff
     blueLabel = new QLabel();
     blueLabel->setObjectName(QString::fromUtf8("blueLabel"));
-    blueLabel->setText(QString("Blue:"));
+    blueLabel->setText(QString("B:"));
     gridLayout->addWidget(blueLabel, 2, 0);
 
     blueSlider = new QSlider();
@@ -189,15 +191,15 @@ void VVGui::setupColorSliders()
     //alpha stuff
     alphaLabel = new QLabel();
     alphaLabel->setObjectName(QString::fromUtf8("alphaLabel"));
-    alphaLabel->setText(QString("Alpha:"));
+    alphaLabel->setText(QString("A:"));
     gridLayout->addWidget(alphaLabel, 3, 0);
 
     alphaSlider = new QSlider();
     alphaSlider->setObjectName(QString::fromUtf8("alphaSlider"));
     alphaSlider->setOrientation(Qt::Horizontal);
-    alphaSlider->setValue(DEFAULT_INITIAL_COLOR_ALPHA);
     alphaSlider->setMaximum(255);
     alphaSlider->setMinimum(0);
+    alphaSlider->setValue(DEFAULT_INITIAL_COLOR_ALPHA);
     alphaSlider->setTickInterval(1);
     gridLayout->addWidget(alphaSlider, 3, 1);
 
@@ -209,28 +211,34 @@ void VVGui::setupColorSliders()
     //iso stuff
     isoLabel = new QLabel();
     isoLabel->setObjectName(QString::fromUtf8("isoLabel"));
-    isoLabel->setText(QString("ISO Val:"));
+    isoLabel->setText(QString("ISO:"));
     gridLayout->addWidget(isoLabel, 4, 0);
 
 
     isoSlider = new QSlider();
     isoSlider->setObjectName(QString::fromUtf8("isoSlider"));
     isoSlider->setOrientation(Qt::Horizontal);
-    isoSlider->setValue(CURRENT_ISO_VALUE);
     isoSlider->setMaximum(DEFAULT_INITIAL_ISO_SLIDER_MAX);
     isoSlider->setMinimum(DEFAULT_INITIAL_ISO_SLIDER_MIN);
+    isoSlider->setValue(DEFAULT_ISO_VALUE);
     isoSlider->setTickInterval(1);
     gridLayout->addWidget(isoSlider, 4, 1);
 
     isoEdit = new QLineEdit();
     isoEdit->setFixedWidth(35);
-    isoEdit->setText(QString::number(CURRENT_ISO_VALUE));
+    isoEdit->setText(QString::number(DEFAULT_ISO_VALUE));
     gridLayout->addWidget(isoEdit, 4,2);
     
    
-
-    saveCurrentIsoSurfaceButton = new QPushButton("&Save Surface");
+    saveCurrentIsoSurfaceButton = new QPushButton("Save Surface");
     saveCurrentIsoSurfaceButton->setObjectName(QString::fromUtf8("saveSurfaceButton"));
-    gridLayout->addWidget(saveCurrentIsoSurfaceButton, 5,0, 3,1);
+    gridLayout->addWidget(saveCurrentIsoSurfaceButton, 5,0, 1,3);
+
+    saveScreenShotWithSurfaceCheckBox = new QCheckBox("Also Save View With Similar File Name");
+    saveScreenShotWithSurfaceCheckBox->setObjectName("saveScreenShotWithSurfaceCheckBox");
+    saveScreenShotWithSurfaceCheckBox->setChecked(false);
+    //saveScreenShotWithSurfaceCheckBox->setText();
+    gridLayout->addWidget(saveScreenShotWithSurfaceCheckBox, 6,0, 1,3);
+
 
 } //setupColorSliders()

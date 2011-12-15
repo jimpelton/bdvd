@@ -45,8 +45,9 @@ private:
 	//calculate initial iso value based off histogram
 	//currently returns a constant value of 85.
 	int calcInitialIsoValue();
-    
     void printSetup();
+    void fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);
+    void saveScreenShot(const char *s);
 
 public:
 	VVMain(void);
@@ -63,8 +64,9 @@ public slots:
 	void SetIsoValue(int v);
 
     int SavePolyDataForIsoSurface();
-
     void ReadPolyDataForIsoSurface();
+
+
 
 	/*
 	 *	Set the red, green or blue color value as an integer from 0-255.

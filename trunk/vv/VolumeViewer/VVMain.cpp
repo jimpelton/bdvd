@@ -45,14 +45,17 @@ int DEFAULT_INITIAL_COLOR_ALPHA = 255;
 
 int DEFAULT_INITIAL_ISO_SLIDER_MAX = 150;
 int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
-int CURRENT_ISO_VALUE = 55;
+int DEFAULT_ISO_VALUE = 55;
 
 char *DEFAULT_SAVE_POLYDATA_FNAME = "pdata.vtk";
 int DEFAULT_SAVE_POLYDATA_FNAME_LENGTH = 9;
 
+char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
+
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
     drf = readerFormat;
+    isoValue=DEFAULT_ISO_VALUE;
     init(drf);
 }
 
@@ -74,7 +77,7 @@ void VVMain::init(DataReaderFormat drf)
 
     if (ISO_SURFACE){
         viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
-            CURRENT_ISO_VALUE, IsoSurfaceViewer::CON_FILTER );
+            isoValue, IsoSurfaceViewer::CON_FILTER );
 
         printSetup();
 
@@ -90,9 +93,6 @@ void VVMain::InitializeRenderer()
 {
      viewer->InitializeRenderer();   
      GetVtkWidget()->SetRenderWindow(viewer->RenWin());
-     
-     //viewer->Iren()->SetRenderWindow(viewer->RenWin());
-     //viewer->Iren()->Initialize();
 }
 
 void VVMain::printSetup()
@@ -118,16 +118,45 @@ void VVMain::printSetup()
  */
 int VVMain::calcInitialIsoValue()
 {
-	return CURRENT_ISO_VALUE;
+	return DEFAULT_ISO_VALUE;
 }
 
+/*
+ * set timeName to a formatted string that is _MMDD_HMS_
+ */
+void VVMain::fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength)
+{
+	time_t theTime = time(0);
+	tm * now = localtime(&theTime);
+	strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
+}
+
+/*
+ * save a screen shot with s being a string with a unique identifying feature
+ * The unique feature could be the system time, such as MMDD_HMS.
+ */
+void VVMain::saveScreenShot(const char * s)
+{
+	const int timeNameLength = 21;
+	char timeName[timeNameLength];
+
+	vtkRenderWindow *renwin = viewer->RenWin();
+	std::stringstream ss;
+	ss << viewer->IsoValue() << s << DEFAULT_SAVE_SCREENSHOT_FNAME;
+	std::string fname = ss.str();
+
+	FileWriter f;
+	f.SaveScreenShot(viewer->RenWin(), fname.c_str());
+}
 
 /************************************************************************/
 /* SIGNALS AND SLOTS HANDLERS.                                          */
 /************************************************************************/
 
 /*
- *	Set the Iso Value for the associated viewer.
+ *	SLOT.
+ *
+ *	Called when the isovalue slider is moved.
  */
 void VVMain::SetIsoValue(int val)
 {
@@ -147,9 +176,11 @@ int VVMain::SavePolyDataForIsoSurface()
     const int timeNameLength = 21;
     char timeName[timeNameLength];  //MMDD_HHMM_pdata.vpd
     
-    time_t theTime = time(0);
-    tm * now = localtime(&theTime);
-    strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
+//    time_t theTime = time(0);
+//    tm * now = localtime(&theTime);
+//    strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
+
+    fileNameTimeString_MMDDHMS(timeName, timeNameLength);
     
     std::string s;
     std::stringstream ss;
@@ -157,9 +188,18 @@ int VVMain::SavePolyDataForIsoSurface()
     s = ss.str();
 
    int ecode = f.SaveIsoSurfacePolyData(viewer->GetPolyData(), s.c_str());
-   fprintf(stdout, "ecode: %d", ecode);
+   fprintf(stdout, "ecode: %d\n", ecode);
+
+   if (this->saveScreenShotWithSurfaceCheckBox->isChecked())
+   {
+	   saveScreenShot(timeName);
+   }
+
    return ecode;
 }
+
+
+
 
 /*
  * SLOT.
@@ -170,6 +210,8 @@ void VVMain::ReadPolyDataForIsoSurface()
 {
     
 }
+
+
 
 
 /*
@@ -215,11 +257,18 @@ void VVMain::SetBlueValue( int blue )
  *	SLOT.
  *
  *  call Refresh() on the viewer, which updates the pipeline.
+ *  Also saves the current color as was specified by the color sliders/edits.
+ *  Also saves the current iso-value as specified by the iso slider/edit.
  */
 void VVMain::RedrawRenderWindow()
 {
-    viewer->SetColorRGB(surfaceColor);
-   if (drf.readerType != VV_POLY_DATA_READER)
-        viewer->IsoValue(isoValue);
-    viewer->Refresh();
+	viewer->SetColorRGB(surfaceColor);
+	if (drf.readerType != VV_POLY_DATA_READER){
+		bool ok = true;
+		isoValue = this->isoEdit->text().toInt(&ok, 10);
+		this->isoSlider->setValue(isoValue);
+		if (!ok) return;
+		viewer->IsoValue(isoValue);
+	}
+	viewer->Refresh();
 }
