@@ -27,7 +27,7 @@ void printUsage(char *extraMessage = NULL)
         "\t\t--xsize <size> --ysize <size>\n" \
         "\t\t--imgstart --imgend [--use8bit]\n\n" \
         "\tNote: <file-prefix> is an absolute path plus the common naming of each file at that path.\n" \
-        "\tExample: --bmpprefix C:\data\fetus\fetus.bmp where each bmp file is appended with number.\n" \
+        "\tExample: --bmpprefix C:\\data\\fetus\\fetus.bmp where each bmp file is appended with number.\n" \
         "";
 
     fprintf(stdout, "%s", s);
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
                         }
                         else if (strcmp(argv[argcnt], "--isoval") == 0)
                         {
-                            CURRENT_ISO_VALUE = atoi(argv[argcnt+1]);
+                            DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
                             argcnt+=2; bmpArgsCnt++;
                         }
 //                         else if (strcmp(argv[argcnt], "--byteOrder"))

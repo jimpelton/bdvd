@@ -55,17 +55,15 @@ protected:
 
 	
 public:
-	IsoSurfaceViewer(void);
+    enum Algos{ NONE = 0, CON_FILTER = 1 };
+
+    IsoSurfaceViewer(void);
 	IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int screenheight,
         int iso_val, int algorithm);
 	~IsoSurfaceViewer(void);
 
-   enum Algos{ NONE = 0, CON_FILTER = 1 };
-
 	int Setup();
 	void InitializeRenderer();
-
-	vtkPolyData* GetPolyData();
 
 /************************************************************************/
 /*     Getters/Setters                                                  */
@@ -83,6 +81,8 @@ public:
 
     int Algorithm() const;
     void Algorithm(int val);
+
+    vtkPolyData* GetPolyData();
 
 };
 
