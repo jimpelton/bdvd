@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
         else
         {
             char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments." \
-                "If --bmpprefix you need at least --xsize, --ysize, --imgend, --imgstart.\n";
+                "If --bmpprefix, you need at least --xsize, --ysize, --imgend, --imgstart.\n";
             printUsage(extraMessage);
         }
         

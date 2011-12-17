@@ -32,10 +32,10 @@
 
 int ISO_SURFACE = 1;
 
-int DEFAULT_SCREEN_WIDTH  = 640;
-int DEFAULT_SCREEN_HEIGHT = 480;
+int DEFAULT_SCREEN_WIDTH  = 640;   //rener window width
+int DEFAULT_SCREEN_HEIGHT = 480;   //rener window height.
 
-int DEFAULT_WINDOW_WIDTH = 1280;
+int DEFAULT_WINDOW_WIDTH = 1280;   
 int DEFAULT_WINDOW_HEIGHT = 720;
 
 int DEFAULT_INITIAL_COLOR_RED   = 228;
@@ -43,10 +43,14 @@ int DEFAULT_INITIAL_COLOR_GREEN = 225;
 int DEFAULT_INITIAL_COLOR_BLUE  = 216;
 int DEFAULT_INITIAL_COLOR_ALPHA = 255;
 
-int DEFAULT_INITIAL_ISO_SLIDER_MAX = 150;
+int DEFAULT_INITIAL_ISO_SLIDER_MAX = 255;
 int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
 int DEFAULT_ISO_VALUE = 55;
 
+/*
+ *  The default name to append to the polydata file name
+ *  after the time and date.
+ */
 char *DEFAULT_SAVE_POLYDATA_FNAME = "pdata.vtk";
 int DEFAULT_SAVE_POLYDATA_FNAME_LENGTH = 9;
 
@@ -55,7 +59,7 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
     drf = readerFormat;
-    isoValue=DEFAULT_ISO_VALUE;
+
     init(drf);
 }
 
@@ -71,7 +75,7 @@ void VVMain::init(DataReaderFormat drf)
 {
 
     surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
-
+    isoValue = DEFAULT_ISO_VALUE;
    
     this->SetupUi(this, drf);
 
@@ -176,9 +180,6 @@ int VVMain::SavePolyDataForIsoSurface()
     const int timeNameLength = 21;
     char timeName[timeNameLength];  //MMDD_HHMM_pdata.vpd
     
-//    time_t theTime = time(0);
-//    tm * now = localtime(&theTime);
-//    strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
 
     fileNameTimeString_MMDDHMS(timeName, timeNameLength);
     
