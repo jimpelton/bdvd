@@ -15,6 +15,7 @@
 #include "Viewer.h"
 #include "../FileWriter.h"
 #include "../Common.h"
+#include "../Surface/SurfaceUtil.h"
 
 #include <vtkSmartPointer.h>
 #include <vtkBMPReader.h>

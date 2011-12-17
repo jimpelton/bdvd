@@ -72,8 +72,12 @@ int IsoSurfaceViewer::Setup()
         pMCubes->SetInputConnection(reader->GetOutputPort());
         pMCubes->ComputeNormalsOn();
         pMCubes->SetValue(0, m_iso_value); 
-        //pMCubes->Update();
+        pMCubes->Update();
     
+        fprintf(stdout, "Calc'ing Surface Area...\n");
+        SurfaceUtil su;
+        su.SurfaceArea(extractor->GetOutput());
+
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     }
     
