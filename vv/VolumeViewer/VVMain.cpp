@@ -30,7 +30,7 @@
 #include <sstream>
 #include <ctime>
 
-int ISO_SURFACE = 1;
+//int ISO_SURFACE = 1;
 
 int DEFAULT_SCREEN_WIDTH  = 640;   //rener window width
 int DEFAULT_SCREEN_HEIGHT = 480;   //rener window height.
@@ -58,9 +58,14 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
-    drf = readerFormat;
 
-    init(drf);
+	m_vo = {0.0, 0.0, 0.0};
+    init(readerFormat, m_vo);
+}
+
+VVMain::VVMain(DataReaderFormat drf, ViewerOptions vo)
+{
+	init(drf, vo);
 }
 
 VVMain::VVMain(void)
@@ -71,25 +76,29 @@ VVMain::~VVMain(void)
 {
 }
 
-void VVMain::init(DataReaderFormat drf)
+void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
 {
+	this->drf = drf;
+	this->m_vo = opts;
+
 
     surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
     isoValue = DEFAULT_ISO_VALUE;
    
     this->SetupUi(this, drf);
 
-    if (ISO_SURFACE){
+    if (m_vo.isoSurface){
         viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
             isoValue, IsoSurfaceViewer::CON_FILTER );
 
         printSetup();
 
+        double r[] = {m_vo.rotX, m_vo.rotY, m_vo.rotZ};
+        viewer->SetRotate(r);
+
         if (viewer->Setup()){
             fprintf(stdout, "Setup failed!\n");
         }
-           
-
     }
 }
 
@@ -211,9 +220,6 @@ void VVMain::ReadPolyDataForIsoSurface()
 {
     
 }
-
-
-
 
 /*
  *	SLOT.

@@ -30,7 +30,7 @@
 #include <vtkAlgorithmOutput.h>
 #include <vtkAppendPolyData.h>
 #include <vtkDataSetMapper.h>
-
+#include <vtkCubeAxesActor.h>
 
 class IsoSurfaceViewer : public Viewer
 {
@@ -41,7 +41,9 @@ private:
 	int m_iso_value;
 	double m_surfaceColor[4];
     int m_algorithm;
-   
+    double m_rotXYZ[3];
+//    double m_bounds[6];
+
     vtkAlgorithmOutput *getAlgoOutput();
 
 protected:
@@ -53,6 +55,8 @@ protected:
     vtkSmartPointer<vtkAppendPolyData> appendFilter;
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter;
     vtkSmartPointer<vtkLODActor> surface;
+    vtkSmartPointer<vtkCubeAxesActor> cubeAxes;
+
 
 	
 public:
@@ -84,6 +88,11 @@ public:
     void Algorithm(int val);
 
     vtkPolyData* GetPolyData();
+
+    void SetRotate(double* wxyz);
+    double* GetRotate();
+
+
 
 };
 

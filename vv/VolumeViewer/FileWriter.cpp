@@ -1,3 +1,5 @@
+
+
 #include "FileWriter.h"
 
 FileWriter::FileWriter()
@@ -8,6 +10,7 @@ FileWriter::~FileWriter(){}
 
 /**
  * Given a vtkPolyData and file name, writes that data to a vtk file with that file name.
+ * The file is a binary vtk polydata  file.
  *
  * Returns the error code from the file writer.
  */
@@ -24,6 +27,12 @@ int FileWriter::SaveIsoSurfacePolyData(vtkPolyData *vpd, const  char * fname)
 }
 
 
+/**
+ * Given a filename, open and read that file.
+ *
+ * Returns NULL if the file isn't a valid polydata file.
+ * Returns a vtkPolyData if the file is a vtk polydata file.
+ */
 vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
 {
     vtkPolyDataReader *reader = vtkPolyDataReader::New();
@@ -35,12 +44,12 @@ vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
     return data;
 }
 
-int FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
+void FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
 {
 	vtkWindowToImageFilter *windowToImageFilter = vtkWindowToImageFilter::New();
 	  windowToImageFilter->SetInput(renwin);
-	  windowToImageFilter->SetMagnification(3); //set the resolution of the output image (3 times the current resolution of vtk render window)
-	  windowToImageFilter->SetInputBufferTypeToRGBA(); //also record the alpha (transparency) channel
+	  windowToImageFilter->SetMagnification(3);
+	  windowToImageFilter->SetInputBufferTypeToRGBA();
 	  windowToImageFilter->Update();
 
 	  vtkPNGWriter *writer = vtkPNGWriter::New();

@@ -18,7 +18,7 @@ public:
     ~FileWriter();
     int SaveIsoSurfacePolyData(vtkPolyData *data, const char * filename);
     vtkPolyData *ReadIsoSurfacePolyData( const char * filename);
-    int SaveScreenShot(vtkRenderWindow *renwin, const char* filename);
+    void SaveScreenShot(vtkRenderWindow *renwin, const char* filename);
 };
 
 #endif // FILEWRITER_H
