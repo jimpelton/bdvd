@@ -21,7 +21,8 @@ IsoSurfaceViewer::IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int 
 {
     m_iso_value = iso_val;
     m_algorithm = algorithm;
-    m_surfaceColor[0] = m_surfaceColor[1] = m_surfaceColor[2] = m_surfaceColor[3] = 1.f;
+    m_surfaceColor[0] = m_surfaceColor[1] = m_surfaceColor[2] = m_surfaceColor[3] = 1.0;
+    m_rotXYZ[0] = m_rotXYZ[1] = m_rotXYZ[2] = 0.0;
 }
 
 
@@ -73,10 +74,6 @@ int IsoSurfaceViewer::Setup()
         pMCubes->ComputeNormalsOn();
         pMCubes->SetValue(0, m_iso_value); 
         pMCubes->Update();
-    
-        fprintf(stdout, "Calc'ing Surface Area...\n");
-        SurfaceUtil su;
-        su.SurfaceArea(extractor->GetOutput());
 
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     }
@@ -84,11 +81,19 @@ int IsoSurfaceViewer::Setup()
     polyDataMapper->ScalarVisibilityOff();
     polyDataMapper->Update();
 
+
     surface = vtkSmartPointer<vtkLODActor>::New();
     surface->SetMapper(polyDataMapper);
     vtkLODActor::SafeDownCast(surface)->SetNumberOfCloudPoints(100000);
     surface->GetProperty()->SetColor(m_surfaceColor[0], m_surfaceColor[1], m_surfaceColor[2]);
     surface->GetProperty()->SetOpacity(m_surfaceColor[3]);
+    surface->RotateX(m_rotXYZ[0]);
+    surface->RotateY(m_rotXYZ[1]);
+    surface->RotateZ(m_rotXYZ[2]);
+
+   // double * bounds = surface->GetBounds();
+   // surface->SetUserTransform()
+
 
     return SETUP_SUCCESS;
 }
@@ -124,13 +129,24 @@ void IsoSurfaceViewer::InitializeRenderer()
 
     fprintf(stdout, "Init renderer...\n");
 
+    cubeAxes = vtkSmartPointer<vtkCubeAxesActor>::New();
+    cubeAxes->SetBounds(polyDataMapper->GetBounds());
+    cubeAxes->SetCamera(m_ren->GetActiveCamera());
+    cubeAxes->VisibilityOn();
+    cubeAxes->SetFlyModeToStaticTriad();
+    cubeAxes->SetLabelScaling(true, 0.5, 0.5, 0.5);
+
+
+    m_ren->AddActor(cubeAxes);
     m_ren->AddActor(surface);
+    m_ren->ResetCamera();
 
     double *c = surface->GetCenter();
     m_camera->SetFocalPoint(0.,0.,0.);
     m_camera->SetPosition(c[0] + 900, c[1], c[2]);
 
     m_camera->SetViewUp(0, 0, 1);
+    //m_camera->SetViewUp(surface->GetOrientation());
     m_camera->ComputeViewPlaneNormal();
     m_ren->ResetCamera();
     m_camera->Dolly(1.5);
@@ -211,3 +227,20 @@ vtkPolyData* IsoSurfaceViewer::GetPolyData()
 	return pMC->GetOutput();
 }
 
+
+//set the rotation values for the surface. rotates about
+//the actor's xyz coordinate axis, not the world.
+//you must update the renderer after this call.
+void IsoSurfaceViewer::SetRotate(double *xyz)
+{
+	m_rotXYZ[0] = xyz[0];
+	m_rotXYZ[1] = xyz[1];
+	m_rotXYZ[2] = xyz[2];
+}
+
+//get the rotation values for the surface.
+//Returns an array of 3 doubles.
+double *IsoSurfaceViewer::GetRotate()
+{
+	return m_rotXYZ;
+}

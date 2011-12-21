@@ -18,6 +18,7 @@
 
 #include "VVGui.h"
 #include "DataReaderFormat.h"
+#include "ViewerOptions.h"
 #include "IsoSurfaceViewer.h"
 #include "FileWriter.h"
 
@@ -36,11 +37,12 @@ private:
 
 	IsoSurfaceViewer *viewer;
 	DataReaderFormat drf;
+	ViewerOptions m_vo;
 	int isoValue;
     double surfaceColor[3];
 
 
-    void init(DataReaderFormat drf);
+    void init(DataReaderFormat drf, ViewerOptions v);
 
 	//calculate initial iso value based off histogram
 	//currently returns a constant value of 85.
@@ -52,6 +54,7 @@ private:
 public:
 	VVMain(void);
     VVMain(DataReaderFormat drf);
+    VVMain(DataReaderFormat drv, ViewerOptions vo);
 	~VVMain(void);
         
         void InitializeRenderer();
