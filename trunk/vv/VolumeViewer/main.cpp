@@ -27,11 +27,11 @@ void printUsage(char *extraMessage = NULL)
         "\tVolumeViewer [options] --bmpprefix <file-prefix> [extractOptions]\n" \
 
         "[options]:\n" \
-        "\t\t --vol" \
+        "\t\t --vol [--isoval]" \
 
         "[extractOptions]:\n" \
         "\t\t--xsize <size> --ysize <size>\n" \
-        "\t\t--imgstart --imgend [--use8bit] [--isoval]\n\n" \
+        "\t\t--imgstart --imgend [--use8bit]\n\n" \
 
 
         "\tNote: <file-prefix> is an absolute path plus the common naming of each file at that path.\n" \
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 				viewOpts.isoSurface = 0;
 				argcnt+=1;
 
-				if (strcmp(argv[argcnt], "--isoval") == 0)
+				if (strcmp(argv[argcnt], "--isoval") == 0)     //extract iso surface
 				{
 					viewOpts.isoSurface = 1;
 					DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
