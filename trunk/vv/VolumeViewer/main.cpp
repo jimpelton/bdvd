@@ -63,19 +63,26 @@ int main(int argc, char* argv[])
 
 		while (argcnt < argc){
 			fprintf(stdout, "Reading commands...\n");
-			if ( strcmp(argv[argcnt], "--polyfile")==0 )
+			if ( strcmp(argv[argcnt], "--polyfile")==0 )            //read a poly map
 			{
 				drf.readerType = VV_POLY_DATA_READER;
 				drf.fileName = argv[argcnt+1];
 				drf.filePrefix = "unknown";
 				argcnt+=2;
 			}
-			else if (strcmp(argv[argcnt], "--vol") == 0)
+			else if (strcmp(argv[argcnt], "--vol") == 0)           //read volume data
 			{
 				viewOpts.isoSurface = 0;
 				argcnt+=1;
 
-				if (strcmp(argv[argcnt], "--bmpprefix") == 0)
+				if (strcmp(argv[argcnt], "--isoval") == 0)
+				{
+					viewOpts.isoSurface = 1;
+					DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
+					argcnt+=2;
+				}
+
+				if (strcmp(argv[argcnt], "--bmpprefix") == 0) //vol data from bmp files.
 				{
 					drf.readerType = VV_MULTI_BMP_READER;
 					drf.filePrefix = argv[argcnt+1];
@@ -111,17 +118,11 @@ int main(int argc, char* argv[])
 							drf.is8Bit = 1;
 							argcnt += 1; bmpArgsCnt++;
 						}
-						else if (strcmp(argv[argcnt], "--isoval") == 0)
-						{
-							viewOpts.isoSurface = 1;
-							DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
-							argcnt+=2; bmpArgsCnt++;
-						}
 					}
-				}//bmpprefix
-			}//vol
+				}
+			}
 		}
-	}//argc>1
+	}//if (argc>1)
 	else
 	{
 		char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments.\n" \
