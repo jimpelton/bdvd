@@ -12,7 +12,9 @@ FileWriter::~FileWriter(){}
  * Given a vtkPolyData and file name, writes that data to a vtk file with that file name.
  * The file is a binary vtk polydata  file.
  *
- * Returns the error code from the file writer.
+ * @param  vpd  the polydata object with the data to save
+ * @param  fname  the filename to save the file with.
+ * @return the error code from the file writer.
  */
 int FileWriter::SaveIsoSurfacePolyData(vtkPolyData *vpd, const  char * fname)
 {
@@ -30,8 +32,9 @@ int FileWriter::SaveIsoSurfacePolyData(vtkPolyData *vpd, const  char * fname)
 /**
  * Given a filename, open and read that file.
  *
- * Returns NULL if the file isn't a valid polydata file.
- * Returns a vtkPolyData if the file is a vtk polydata file.
+ * @param  fileName The file name to read.
+ * @return NULL if the file isn't a valid polydata file or the
+ *         vtkPolyData if the file is a vtk polydata file.
  */
 vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
 {
@@ -44,6 +47,11 @@ vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
     return data;
 }
 
+/**
+ * Use the given renderwindow to save a screen shot in png format.
+ * @param renwin  the renderwindow to use.
+ * @param fileName the filename to save it as.
+ */
 void FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
 {
 	vtkWindowToImageFilter *windowToImageFilter = vtkWindowToImageFilter::New();

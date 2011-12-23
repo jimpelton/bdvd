@@ -11,7 +11,7 @@
 #define KEYPRESSINTERACTORSTYLE_H
 
 #include "VolumeViewer.h"
-#include "../UIMain.h"
+#include "UIMain.h"
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>

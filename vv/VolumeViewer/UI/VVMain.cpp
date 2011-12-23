@@ -59,8 +59,8 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
 
-	m_vo = {0.0, 0.0, 0.0};
-    init(readerFormat, m_vo);
+	ViewerOptions tmpVO = {1, 0.0, 0.0, 0.0};
+    init(readerFormat, tmpVO);
 }
 
 VVMain::VVMain(DataReaderFormat drf, ViewerOptions vo)
@@ -141,7 +141,7 @@ void VVMain::fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength)
 {
 	time_t theTime = time(0);
 	tm * now = localtime(&theTime);
-	strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMM_
+	strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMMSS_
 }
 
 /*
