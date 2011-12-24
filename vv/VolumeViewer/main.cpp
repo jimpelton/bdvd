@@ -72,12 +72,12 @@ int main(int argc, char* argv[])
 			}
 			else if (strcmp(argv[argcnt], "--vol") == 0)           //read volume data
 			{
-				viewOpts.isoSurface = 0;
+				viewOpts.extractISOSurface = 0;
 				argcnt+=1;
 
 				if (strcmp(argv[argcnt], "--isoval") == 0)     //extract iso surface
 				{
-					viewOpts.isoSurface = 1;
+					viewOpts.extractISOSurface = 1;
 					DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
 					argcnt+=2;
 				}

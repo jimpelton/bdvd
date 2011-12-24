@@ -58,18 +58,21 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
-
+	viewer=NULL;
 	ViewerOptions tmpVO = {1, 0.0, 0.0, 0.0};
     init(readerFormat, tmpVO);
 }
 
 VVMain::VVMain(DataReaderFormat drf, ViewerOptions vo)
 {
+	viewer = NULL;
 	init(drf, vo);
 }
 
 VVMain::VVMain(void)
-{}
+{
+	viewer=NULL;
+}
 
 
 VVMain::~VVMain(void)
@@ -87,7 +90,7 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
    
     this->SetupUi(this, drf);
 
-    if (m_vo.isoSurface){
+    if (m_vo.extractISOSurface){
         viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
             isoValue, IsoSurfaceViewer::CON_FILTER );
 
@@ -98,7 +101,11 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
 
         if (viewer->Setup()){
             fprintf(stdout, "Setup failed!\n");
+            return;
         }
+
+        printSurfaceStats();
+
     }
 }
 
@@ -124,6 +131,13 @@ void VVMain::printSetup()
         drf.is8Bit == 0 ? "No" : "Yes", 
         drf.fileByteOrder == VV_BIG_ENDIAN ? "BIG ENDIAN" : "LITTLE ENDIAN");
     fprintf(stdout, "\n\tISO VALUE: %d\n", viewer->IsoValue());
+}
+
+void VVMain::printSurfaceStats()
+{
+	double area = SurfaceUtil::SurfaceArea(viewer->GetPolyData());
+	double avglng = SurfaceUtil::TriangleAvgEdgeLength(viewer->GetPolyData());
+	fprintf(stdout, "Surface Stats: (iso val: %d)\n \tavg length: %f\n \tsfc area:%f \n", viewer->IsoValue(), avglng, area);
 }
 
 /*
@@ -278,4 +292,5 @@ void VVMain::RedrawRenderWindow()
 		viewer->IsoValue(isoValue);
 	}
 	viewer->Refresh();
+	printSurfaceStats();
 }
