@@ -21,6 +21,7 @@
 #include "ViewerOptions.h"
 #include "IsoSurfaceViewer.h"
 #include "FileWriter.h"
+#include "SurfaceUtil.h"
 
 #include <QtGui/QMainWindow>
 #include <QtCore/QObject>
@@ -50,6 +51,7 @@ private:
     void printSetup();
     void fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);
     void saveScreenShot(const char *s);
+    void printSurfaceStats();
 
 public:
 	VVMain(void);

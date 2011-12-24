@@ -10,7 +10,7 @@
 #include "IsoSurfaceViewer.h"
 
 #define SETUP_SUCCESS 0
-
+#define SETUP_FAILURE !SETUP_SUCCESS
 
 IsoSurfaceViewer::IsoSurfaceViewer(void){}
 
@@ -43,6 +43,7 @@ int IsoSurfaceViewer::Setup()
         vtkPolyDataReader *vpdr = vtkPolyDataReader::New();
         vpdr->SetFileName(m_readerFormat.fileName); 
         vpdr->Update();
+        if (!vpdr->IsFilePolyData()) return SETUP_FAILURE;
         polyDataMapper->SetInput(vpdr->GetOutput());
     }
     else
@@ -90,10 +91,6 @@ int IsoSurfaceViewer::Setup()
     surface->RotateX(m_rotXYZ[0]);
     surface->RotateY(m_rotXYZ[1]);
     surface->RotateZ(m_rotXYZ[2]);
-
-   // double * bounds = surface->GetBounds();
-   // surface->SetUserTransform()
-
 
     return SETUP_SUCCESS;
 }
@@ -159,6 +156,8 @@ void IsoSurfaceViewer::InitializeRenderer()
 
     fprintf(stdout, "Done initializing render...\n");
 }
+
+
 
 /************************************************************************/
 /* getters/setters                                                      */

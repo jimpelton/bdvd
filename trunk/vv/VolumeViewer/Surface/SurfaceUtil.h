@@ -18,6 +18,7 @@
 #include <vtkCell.h>
 #include <vtkTriangle.h>
 #include <vtkPoints.h>
+#include <vtkLine.h>
 
 
 class SurfaceUtil
@@ -28,10 +29,11 @@ public:
 public:
     SurfaceUtil();
 
-    void CountTris(vtkPolyData *);
-    void CountVerts(vtkPolyData *);
-    void CellArray(vtkPolyData *);
-    double SurfaceArea(vtkPolyData *);
+    //static void CountTris(vtkPolyData *);
+    //static void CountVerts(vtkPolyData *);
+    //static void CellArray(vtkPolyData *);
+    static double SurfaceArea(vtkPolyData *);
+    static double TriangleAvgEdgeLength(vtkPolyData*);
 
 
 

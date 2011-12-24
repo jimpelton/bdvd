@@ -49,6 +49,7 @@ vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
 
 /**
  * Use the given renderwindow to save a screen shot in png format.
+ *
  * @param renwin  the renderwindow to use.
  * @param fileName the filename to save it as.
  */
