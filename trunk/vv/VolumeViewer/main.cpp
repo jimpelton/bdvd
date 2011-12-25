@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
 			fprintf(stdout, "Reading commands...\n");
 			if ( strcmp(argv[argcnt], "--polyfile")==0 )            //read a poly map
 			{
+				viewOpts.extractISOSurface = 0;
 				drf.readerType = VV_POLY_DATA_READER;
 				drf.fileName = argv[argcnt+1];
 				drf.filePrefix = "unknown";

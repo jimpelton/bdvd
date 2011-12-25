@@ -25,6 +25,7 @@
 #include <vtkPolyDataConnectivityFilter.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkPolyDataReader.h>
+#include <vtkPolyData.h>
 #include <vtkLODActor.h>
 #include <vtkProperty.h>
 #include <vtkAlgorithmOutput.h>
@@ -51,6 +52,7 @@ protected:
     vtkSmartPointer<vtkBMPReader> reader;
     vtkSmartPointer<vtkPolyDataAlgorithm> extractor;
     vtkSmartPointer<vtkPolyDataMapper> polyDataMapper;
+    vtkSmartPointer<vtkPolyData> polyData;
     vtkSmartPointer<vtkExtractVOI> voiExtractor;
     vtkSmartPointer<vtkAppendPolyData> appendFilter;
     vtkSmartPointer<vtkPolyDataConnectivityFilter> conFilter;

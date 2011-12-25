@@ -20,6 +20,7 @@
 #include <vtkPoints.h>
 #include <vtkLine.h>
 
+#include <map>
 
 class SurfaceUtil
 {
@@ -33,8 +34,7 @@ public:
     //static void CountVerts(vtkPolyData *);
     //static void CellArray(vtkPolyData *);
     static double SurfaceArea(vtkPolyData *);
-    static double TriangleAvgEdgeLength(vtkPolyData*);
-
+    static double TriangleAvgEdgeLength(vtkPolyData* surface, std::map<double, long> *bins = NULL);
 
 
 };

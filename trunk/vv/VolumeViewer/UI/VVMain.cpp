@@ -29,6 +29,7 @@
 #include <string>
 #include <sstream>
 #include <ctime>
+#include <map>
 
 //int ISO_SURFACE = 1;
 
@@ -90,7 +91,7 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
    
     this->SetupUi(this, drf);
 
-    if (m_vo.extractISOSurface){
+   // if (m_vo.extractISOSurface){
         viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
             isoValue, IsoSurfaceViewer::CON_FILTER );
 
@@ -106,7 +107,7 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
 
         printSurfaceStats();
 
-    }
+  //  }
 }
 
 void VVMain::InitializeRenderer()
@@ -136,8 +137,12 @@ void VVMain::printSetup()
 void VVMain::printSurfaceStats()
 {
 	double area = SurfaceUtil::SurfaceArea(viewer->GetPolyData());
-	double avglng = SurfaceUtil::TriangleAvgEdgeLength(viewer->GetPolyData());
+	std::map<double, long> *avglengths = new std::map<double, long>();
+	double avglng = SurfaceUtil::TriangleAvgEdgeLength(viewer->GetPolyData(), avglengths);
+
 	fprintf(stdout, "Surface Stats: (iso val: %d)\n \tavg length: %f\n \tsfc area:%f \n", viewer->IsoValue(), avglng, area);
+	fprintf(stdout, "Number of unique triangle edge length averages: %d\n", avglengths->size());
+	delete avglengths;
 }
 
 /*
