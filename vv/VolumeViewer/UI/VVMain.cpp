@@ -78,6 +78,7 @@ VVMain::VVMain(void)
 
 VVMain::~VVMain(void)
 {
+	//delete viewer;
 }
 
 void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
