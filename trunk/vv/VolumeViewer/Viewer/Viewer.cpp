@@ -15,8 +15,7 @@
 
 
 Viewer::Viewer(void)
-{
-}
+{}
 
 Viewer::Viewer(DataReaderFormat & drf, int screenwidth, int screenheight)
 {
@@ -37,9 +36,10 @@ Viewer::Viewer(DataReaderFormat & drf, int screenwidth, int screenheight)
 Viewer::~Viewer(void){}
 
 /**
- * protected method called from Viewer's constructor.
- * Inits the renderer, render window, interactor, camera.
+ *   protected method called from Viewer's constructor.
+ *   Inits the renderer, render window, interactor, camera.
  *  
+ *  @return always returns 1
  */
 int Viewer::setup(){
 
@@ -50,8 +50,6 @@ int Viewer::setup(){
     m_renWin->AddRenderer(m_ren);
 
     m_iren = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    //m_iren->SetRenderWindow(m_renWin);
-    //m_iren->SetInteractorStyle(vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New());
 
     m_camera = vtkSmartPointer<vtkCamera>::New();
     m_ren->SetActiveCamera(m_camera);
@@ -77,6 +75,7 @@ void Viewer::Refresh()
         fprintf(stdout, "Viewer::Refresh RESULT: %s\n", er);
     }
 }
+
 
 
 /************************************************************************/

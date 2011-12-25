@@ -37,52 +37,29 @@ int IsoSurfaceViewer::Setup()
 {
     fprintf(stdout, "Setup...\n");
     polyDataMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    reader = ReaderFactory::GetReader(&m_readerFormat);
+
 
     if (m_readerFormat.readerType == VV_POLY_DATA_READER )
     {
-        vtkPolyDataReader *vpdr = vtkPolyDataReader::New();
-        vpdr->SetFileName(m_readerFormat.fileName); 
-        vpdr->Update();
-        if (!vpdr->IsFilePolyData()) return SETUP_FAILURE;
-        polyData = vpdr->GetOutput();
-        polyDataMapper->SetInput(polyData);
+        polyDataMapper->SetInputConnection(reader->GetOutputPort());
+        //polyData = polyDataMapper->GetInput();
     }
     else
     {
-        reader = vtkSmartPointer<vtkBMPReader>::New();
-        reader->SetFilePrefix(m_readerFormat.filePrefix);
-        reader->Update();
-        int ecode = reader->GetErrorCode();
-        if (ecode != 0){
-            return ecode;
-        }
-
-        reader->SetAllow8BitBMP(m_readerFormat.is8Bit);
-
-        reader->SetFileNameSliceOffset( m_readerFormat.imgRngStart );
-        reader->SetDataExtent( 0, m_readerFormat.dimX,
-                               0, m_readerFormat.dimY,
-                               m_readerFormat.imgRngStart,
-                               m_readerFormat.imgRngEnd);
-
-        reader->SetDataOrigin(0.,0.,0.);
-        reader->SetDataScalarTypeToUnsignedChar();
-        reader->SetDataByteOrderToBigEndian();
-        //reader->Update();
-
         extractor = vtkSmartPointer<vtkMarchingCubes>::New();
         vtkMarchingCubes *pMCubes = vtkMarchingCubes::SafeDownCast(extractor);
         pMCubes->SetInputConnection(reader->GetOutputPort());
         pMCubes->ComputeNormalsOn();
         pMCubes->SetValue(0, m_iso_value); 
         pMCubes->Update();
-        polyData = pMCubes->GetOutput();
+        //polyData = pMCubes->GetOutput();
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     }
     
     polyDataMapper->ScalarVisibilityOff();
     polyDataMapper->Update();
-
+    polyData = polyDataMapper->GetInput();
 
     surface = vtkSmartPointer<vtkLODActor>::New();
     surface->SetMapper(polyDataMapper);
