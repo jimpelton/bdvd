@@ -44,7 +44,8 @@ int IsoSurfaceViewer::Setup()
         vpdr->SetFileName(m_readerFormat.fileName); 
         vpdr->Update();
         if (!vpdr->IsFilePolyData()) return SETUP_FAILURE;
-        polyDataMapper->SetInput(vpdr->GetOutput());
+        polyData = vpdr->GetOutput();
+        polyDataMapper->SetInput(polyData);
     }
     else
     {
@@ -75,7 +76,7 @@ int IsoSurfaceViewer::Setup()
         pMCubes->ComputeNormalsOn();
         pMCubes->SetValue(0, m_iso_value); 
         pMCubes->Update();
-
+        polyData = pMCubes->GetOutput();
         polyDataMapper->SetInputConnection(extractor->GetOutputPort());
     }
     
@@ -222,8 +223,7 @@ void IsoSurfaceViewer::Algorithm( int val )
 
 vtkPolyData* IsoSurfaceViewer::GetPolyData()
 {
-	vtkMarchingCubes *pMC = vtkMarchingCubes::SafeDownCast(extractor);
-	return pMC->GetOutput();
+	return polyData;
 }
 
 
