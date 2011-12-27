@@ -12,6 +12,7 @@
 #include "VVMain.h"
 #include "DataReaderFormat.h"
 #include "ViewerOptions.h"
+#include "CLParser.h"
 
 #include <QtGui/QApplication>
 #include <stdlib.h>
@@ -27,7 +28,7 @@ void printUsage(char *extraMessage = NULL)
         "\tVolumeViewer [options] --bmpprefix <file-prefix> [extractOptions]\n" \
 
         "[options]:\n" \
-        "\t\t --vol [--isoval]" \
+        "\t\t --vol [--isoval]\n" \
 
         "[extractOptions]:\n" \
         "\t\t--xsize <size> --ysize <size>\n" \
@@ -41,7 +42,7 @@ void printUsage(char *extraMessage = NULL)
     fprintf(stdout, "%s", s);
     if (extraMessage != NULL)
     {
-        fprintf(stdout, "\n\n %s", s);
+        fprintf(stdout, "\n\n %s", extraMessage);
     }
 }
 
@@ -53,77 +54,50 @@ int main(int argc, char* argv[])
 	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
 	ViewerOptions viewOpts = {1, 0.0, 0.0, 0.0};
 
-	if (argc > 1){
-		int argcnt = 1;
-		if (strcmp(argv[argcnt], "--help") == 0)
+	if (strcmp(argv[1], "--help") == 0)
+	{
+		printUsage();
+		return 0;
+	}
+
+	int n;
+	char *s;
+	if (CLParser::Init(argc, argv) > 1)
+	{
+		fprintf(stdout, "Reading commands...\n");
+
+		if (CLParser::ParseCL_s("polyfile", &(drf.fileName)))    //render binary poly data
 		{
-			printUsage();
-			return 0;
+			//drf.fileName = s;
+			drf.readerType = VV_POLY_DATA_READER;
+			drf.filePrefix = "unknown";
+			viewOpts.extractISOSurface = 0;
 		}
+		else
+		{
 
-		while (argcnt < argc){
-			fprintf(stdout, "Reading commands...\n");
-			if ( strcmp(argv[argcnt], "--polyfile")==0 )            //read a poly map
+			if (CLParser::ParseCL_n("isoval", &n))    //extract an isovalue.
 			{
-				viewOpts.extractISOSurface = 0;
-				drf.readerType = VV_POLY_DATA_READER;
-				drf.fileName = argv[argcnt+1];
-				drf.filePrefix = "unknown";
-				argcnt+=2;
+				viewOpts.extractISOSurface = 1;
+				DEFAULT_ISO_VALUE = n;
 			}
-			else if (strcmp(argv[argcnt], "--vol") == 0)           //read volume data
+			if (CLParser::ParseCL_s("bmpprefix", &(drf.filePrefix)))     //
 			{
-				viewOpts.extractISOSurface = 0;
-				argcnt+=1;
+				drf.readerType = VV_MULTI_BMP_READER;
+				drf.fileName = "unknown";
 
-				if (strcmp(argv[argcnt], "--isoval") == 0)     //extract iso surface
+				if ( (CLParser::ParseCL_n("xsize",   &(drf.dimX))        &&
+					  CLParser::ParseCL_n("ysize",   &(drf.dimY))        &&
+					  CLParser::ParseCL_n("imgstart",&(drf.imgRngStart)) &&
+					  CLParser::ParseCL_n("imgend",  &(drf.imgRngEnd)))  == false)
 				{
-					viewOpts.extractISOSurface = 1;
-					DEFAULT_ISO_VALUE = atoi(argv[argcnt+1]);
-					argcnt+=2;
+					printUsage("Either xsize, ysize, imgstart or imgend was missing or malformed.\n");
+					return 0;
 				}
-
-				if (strcmp(argv[argcnt], "--bmpprefix") == 0) //vol data from bmp files.
-				{
-					drf.readerType = VV_MULTI_BMP_READER;
-					drf.filePrefix = argv[argcnt+1];
-					drf.fileName = "unknown";
-					argcnt+=2;
-
-					int bmpArgsCnt = 0;
-					while (argcnt < argc)
-					{
-
-						if (strcmp(argv[argcnt], "--xsize") == 0)
-						{
-							drf.dimX = atoi(argv[argcnt+1]);
-							argcnt+=2; bmpArgsCnt++;
-						}
-						else if (strcmp(argv[argcnt], "--ysize") == 0)
-						{
-							drf.dimY = atoi(argv[argcnt+1]);
-							argcnt+=2; bmpArgsCnt++;
-						}
-						else if (strcmp(argv[argcnt], "--imgend") == 0)
-						{
-							drf.imgRngEnd = atoi(argv[argcnt+1]);
-							argcnt+=2; bmpArgsCnt++;
-						}
-						else if (strcmp(argv[argcnt], "--imgstart") == 0)
-						{
-							drf.imgRngStart = atoi(argv[argcnt+1]);
-							argcnt+=2;  bmpArgsCnt++;
-						}
-						else if (strcmp(argv[argcnt], "--use8bit") == 0)
-						{
-							drf.is8Bit = 1;
-							argcnt += 1; bmpArgsCnt++;
-						}
-					}
-				}
+				CLParser::ParseCL_n("use8bit", &(drf.is8Bit));
 			}
 		}
-	}//if (argc>1)
+	}
 	else
 	{
 		char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments.\n" \
@@ -131,6 +105,7 @@ int main(int argc, char* argv[])
 		printUsage(extraMessage);
 		return 0;
 	}
+
 
 	drf.nSpacingX = 1;
 	drf.nSpacingY = 1;
