@@ -1,0 +1,106 @@
+/*
+ * CLParser.cpp
+ *
+ *  Created on: Dec 25, 2011
+ *      Author: jim
+ *
+ *  Purpose: A convenienve class for parsing the given command line.
+ */
+
+#include "CLParser.h"
+#include <cstdlib>
+#include <string.h>
+#include <sstream>
+
+CLParser *CLParser::myself = NULL;
+
+CLParser::CLParser() : args()
+{
+
+}
+
+CLParser::~CLParser()
+{
+
+}
+
+/**
+ * Initialize the CLParser with the command line in argv.
+ * @param argc
+ * @param argv
+ * @return
+ */
+int CLParser::Init(int argc, char *argv[])
+{
+	if (myself == NULL)
+	{
+		myself = new CLParser();
+
+	}
+
+	int i = 1;
+	while (i < argc)
+	{
+		std::string title = argv[i];
+		if (title.substr(0,2).compare("--") == 0)
+		{
+			std::string next;
+			if (i+1 < argc){
+				i+=1;
+				next = argv[i];
+			}else return i;
+
+			if (next.substr(0,2).compare("--") == 0) continue;
+
+			myself->args[title.substr(2)] = next;
+			i+=1;
+		}
+	}
+	return i;
+}
+
+/**
+ *
+ * @param src
+ * @param dst
+ * @return
+ */
+bool CLParser::ParseCL_n(const char * src, int * dst)
+{
+	ArgIter iter = myself->args.find(src);
+	if (iter == myself->args.end())
+	{
+		return false;
+	}
+
+	std::istringstream input(iter->second);
+	input >> *dst;
+
+	return true;
+}
+
+/**
+ *
+ * @param src
+ * @param dst
+ * @return
+ */
+bool CLParser::ParseCL_s(const char *src, char ** dst)
+{
+	ArgIter iter = myself->args.find(src);
+	if (iter == myself->args.end())
+	{
+		return false;
+	}
+
+	std::string *val = &(iter->second);
+	if (val != NULL){
+		*dst = (char*) malloc(sizeof(char) * val->length());
+		strcpy(*dst, val->c_str());
+	}else{
+		*dst = NULL;
+		return false;
+	}
+
+	return true;
+}

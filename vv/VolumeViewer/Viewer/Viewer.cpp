@@ -28,7 +28,6 @@ Viewer::Viewer(DataReaderFormat & drf, int screenwidth, int screenheight)
     outwin = vtkOutputWindow::GetInstance();
 
     if (outwin) outwin->SetInstance(outFileWindow);
-    
 
     setup();
 }
