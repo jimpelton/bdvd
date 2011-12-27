@@ -30,9 +30,10 @@ public:
 	static int Init(int, char**);
 
 
-	static bool ParseCL_n(const char* src , int* dst);
+	static bool ParseCL_n(const char * src , int* dst);
 	//static bool ParseCL_f(const char* src, float* dst);
-	static bool ParseCL_s(const char* src, char ** dst);
+	static bool ParseCL_s(const char * src, char ** dst);
+	static bool ParseCL_flag(const char * src);
 	//static bool ParseCL_n_lst(const char *src, int *dst);
 
 

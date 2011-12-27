@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
 	}
 
 	int n;
-	char *s;
 	if (CLParser::Init(argc, argv) > 1)
 	{
 		fprintf(stdout, "Reading commands...\n");

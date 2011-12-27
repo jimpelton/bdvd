@@ -66,6 +66,7 @@ double SurfaceUtil::TriangleAvgEdgeLength(vtkPolyData *pd, std::map<double, long
 
 
 
+
 /**
  * Adds up the triangle surface areas for the given vtkPolyData. If
  * a non-triangle cell is encountered the method returns -1.0;
