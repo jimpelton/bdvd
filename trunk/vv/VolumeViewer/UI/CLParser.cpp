@@ -50,7 +50,8 @@ int CLParser::Init(int argc, char *argv[])
 				next = argv[i];
 			}else return i;
 
-			if (next.substr(0,2).compare("--") == 0) continue;
+			if (next.substr(0,2).compare("--") == 0) //we have an option-less argument
+				next = "FLAG";
 
 			myself->args[title.substr(2)] = next;
 			i+=1;
@@ -75,7 +76,6 @@ bool CLParser::ParseCL_n(const char * src, int * dst)
 
 	std::istringstream input(iter->second);
 	input >> *dst;
-
 	return true;
 }
 
@@ -99,6 +99,28 @@ bool CLParser::ParseCL_s(const char *src, char ** dst)
 		strcpy(*dst, val->c_str());
 	}else{
 		*dst = NULL;
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ *
+ * @param src
+ * @param dst
+ * @return
+ */
+bool CLParser::ParseCL_flag(const char *src)
+{
+	ArgIter iter = myself->args.find(src);
+	if (iter == myself->args.end())
+	{
+		return false;
+	}
+
+	if (iter->second.compare("FLAG") != 0)
+	{
 		return false;
 	}
 
