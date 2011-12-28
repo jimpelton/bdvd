@@ -6,11 +6,12 @@
 	file ext:	cpp
 	author:		jim
 	
-	purpose:	Setup the viewer with filename, other intial components.
-	            Pass messages from the VVGui to the viewer component.
+	purpose:	The logic for setting up the 3D surface and volume renderer GUI.
+				Sets up the GUI and place the VTK widget in the QT window.
+	            Sets up the Viewer object.
 				
 				NOTE: This file requires that it be MOC'd after any changes and 
-				prior to compilation with cl.exe or gcc (win and linux).
+				prior to compilation with cl.exe or gcc (win and lin).
 *********************************************************************/
 
 
@@ -227,8 +228,6 @@ int VVMain::SavePolyDataForIsoSurface()
 
    return ecode;
 }
-
-
 
 
 /*

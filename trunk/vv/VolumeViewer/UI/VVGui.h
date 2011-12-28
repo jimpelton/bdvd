@@ -8,6 +8,7 @@
  author:		Jim Pelton
 
  purpose:	Contains the implementation of the GUI.
+            Contains the QVTKWidget!
 *********************************************************************/
 
 
