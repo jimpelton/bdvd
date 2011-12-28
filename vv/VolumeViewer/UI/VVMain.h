@@ -7,8 +7,9 @@
 	file ext:	h
 	author:		jim
 	
-	purpose:	Setup the GUI and place the VTK widget in the QT window.
-	            Setup the Viewer object.
+	purpose:	The logic for setting up the 3D surface and volume renderer GUI.
+				Sets up the GUI and place the VTK widget in the QT window.
+	            Sets up the Viewer object.
 *********************************************************************/
 
 

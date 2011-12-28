@@ -28,7 +28,7 @@ void printUsage(char *extraMessage = NULL)
         "\tVolumeViewer [options] --bmpprefix <file-prefix> [extractOptions]\n" \
 
         "[options]:\n" \
-        "\t\t --vol [--isoval]\n" \
+        "\t\t[--isoval]\n" \
 
         "[extractOptions]:\n" \
         "\t\t--xsize <size> --ysize <size>\n" \
@@ -44,6 +44,26 @@ void printUsage(char *extraMessage = NULL)
     {
         fprintf(stdout, "\n\n %s", extraMessage);
     }
+}
+
+int readerOptions(DataReaderFormat *drf)
+{
+	if (CLParser::ParseCL_s("bmpprefix", &(drf->filePrefix)))     //
+	{
+		drf->readerType = VV_MULTI_BMP_READER;
+		drf->fileName = "unknown";
+
+		if ( (CLParser::ParseCL_n("xsize",     &(drf->dimX))      &&
+			  CLParser::ParseCL_n("ysize",   &(drf->dimY))        &&
+			  CLParser::ParseCL_n("imgstart",&(drf->imgRngStart)) &&
+			  CLParser::ParseCL_n("imgend",  &(drf->imgRngEnd)))  == false)
+		{
+			printUsage("Either xsize, ysize, imgstart or imgend was missing or malformed.\n");
+			return 0;
+		}
+		CLParser::ParseCL_n("use8bit", &(drf->is8Bit));
+	}
+	return 1;
 }
 
 int main(int argc, char* argv[])
@@ -72,37 +92,28 @@ int main(int argc, char* argv[])
 			drf.filePrefix = "unknown";
 			viewOpts.extractISOSurface = 0;
 		}
-		else
+		else if (CLParser::ParseCL_n("isoval", &n))    //extract an isovalue.
 		{
+			viewOpts.extractISOSurface = 1;
+			DEFAULT_ISO_VALUE = n;
 
-			if (CLParser::ParseCL_n("isoval", &n))    //extract an isovalue.
-			{
-				viewOpts.extractISOSurface = 1;
-				DEFAULT_ISO_VALUE = n;
-			}
-			if (CLParser::ParseCL_s("bmpprefix", &(drf.filePrefix)))     //
-			{
-				drf.readerType = VV_MULTI_BMP_READER;
-				drf.fileName = "unknown";
-
-				if ( (CLParser::ParseCL_n("xsize",   &(drf.dimX))        &&
-					  CLParser::ParseCL_n("ysize",   &(drf.dimY))        &&
-					  CLParser::ParseCL_n("imgstart",&(drf.imgRngStart)) &&
-					  CLParser::ParseCL_n("imgend",  &(drf.imgRngEnd)))  == false)
-				{
-					printUsage("Either xsize, ysize, imgstart or imgend was missing or malformed.\n");
-					return 0;
-				}
-				CLParser::ParseCL_n("use8bit", &(drf.is8Bit));
-			}
+			if (!readerOptions(&drf)) exit(0);
 		}
+
+		/*
+		 * else if (CLParser::ParseCL_flag("volume"))
+		 * {
+		 *   ...
+		 *   readerOptions(&drf);
+		 * }
+		 */
 	}
 	else
 	{
 		char *extraMessage = "Please specify at least --polyfile <file-name> or --bmpprefix <file-name> <options> [options] and the corresponding arguments.\n" \
 				"If --bmpprefix you need at least --xsize, --ysize, --imgend, --imgstart.\n";
 		printUsage(extraMessage);
-		return 0;
+		exit(0);
 	}
 
 
