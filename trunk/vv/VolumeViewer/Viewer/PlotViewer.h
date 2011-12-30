@@ -10,6 +10,7 @@
 
 
 #include "ReaderFactory.h"
+#include "Viewer.h"
 
 #include <vtkDataArray.h>
 #include <vtkSmartPointer.h>
@@ -20,7 +21,7 @@
 #include <vtkTable.h>
 
 
-class PlotViewer {
+class PlotViewer : Viewer {
 
 private:
 
@@ -33,25 +34,25 @@ private:
 	vtkSmartPointer<vtkPlot> line;
 	vtkSmartPointer<vtkAlgorithm> reader;
 
-	DataReaderFormat m_drf;
-
-	void init();
 
 public:
-	PlotViewer(DataReaderFormat drf);
-	PlotViewer(DataReaderFormat drv,
+	PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight);
+	PlotViewer(DataReaderFormat drv, int screenWidth, int screenHeight,
 			vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr);
-
 
 	~PlotViewer();
 
+	///////overrides from Viewer///////
 	int Setup();
+	void InitializeRenderer();
+	void Refresh();
+
 
     vtkSmartPointer<vtkContextView> GetView() const;
-    void setView(vtkSmartPointer<vtkContextView> view);
+    //void setView(vtkSmartPointer<vtkContextView> view);
 
 
-    void InitializeRenderer();
+
 };
 
 #endif /* PLOTVIEWER_H_ */

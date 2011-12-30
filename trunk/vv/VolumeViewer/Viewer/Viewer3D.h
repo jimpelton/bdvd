@@ -38,7 +38,7 @@ protected:
 	double m_dDiffuse;
 	double m_dSpecular;
 
-	int viewer_setup();
+	virtual int viewer_setup();
 
 public:
 	Viewer3D();

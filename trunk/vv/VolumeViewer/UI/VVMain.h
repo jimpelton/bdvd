@@ -53,6 +53,7 @@ private:
     void fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);
     void saveScreenShot(const char *s);
     void printSurfaceStats();
+    void iso_surface_mode();
 
 public:
 	VVMain(void);
@@ -60,7 +61,7 @@ public:
     VVMain(DataReaderFormat drv, ViewerOptions vo);
 	~VVMain(void);
         
-        void InitializeRenderer();
+    void InitializeRenderer();
 
 public slots:
 

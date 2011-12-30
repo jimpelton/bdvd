@@ -48,7 +48,6 @@ private:
 	double m_surfaceColor[4];
     int m_algorithm;
     double m_rotXYZ[3];
-//    double m_bounds[6];
 
     vtkAlgorithmOutput *getAlgoOutput();
 
@@ -74,9 +73,9 @@ public:
         int iso_val, int algorithm);
 	~IsoSurfaceViewer(void);
 
+	//overrides from Viewer//
 	int Setup();
 	void InitializeRenderer();
-	//void Refresh();
 
 
 /************************************************************************/

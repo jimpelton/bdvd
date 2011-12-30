@@ -7,14 +7,9 @@
 
 #include "PlotViewerGui.h"
 
-PlotViewerGui::PlotViewerGui() {
+PlotViewerGui::PlotViewerGui() {}
 
-
-}
-
-PlotViewerGui::~PlotViewerGui() {
-
-}
+PlotViewerGui::~PlotViewerGui() {}
 
 
 

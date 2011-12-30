@@ -11,28 +11,24 @@
 #include <vtkVariant.h>
 #include <map>
 
-PlotViewer::PlotViewer(DataReaderFormat drf)
-{
-	m_drf = drf;
-}
-PlotViewer::PlotViewer(DataReaderFormat drv,
-		vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr)
-{
+PlotViewer::PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight) :
+	Viewer(drf, screenWidth, screenHeight) {}
 
+PlotViewer::PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight,
+		vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr) :
+		Viewer(drf, screenWidth, screenHeight)
+{
 	if (xarr != NULL && yarr != NULL)
 	{
-
+		m_arrX = xarr;
+		m_arrY = yarr;
 	}
 }
+
+
 PlotViewer::~PlotViewer() {}
 
-void PlotViewer::init(){}
 
-
-/**
- *
- * @return 0 on failure, 1 on success.
- */
 int PlotViewer::Setup()
 {
 	if (m_arrX == NULL || m_arrY == NULL){
@@ -45,7 +41,7 @@ int PlotViewer::Setup()
 	table->AddColumn(m_arrX);
 	table->AddColumn(m_arrY);
 
-	reader = ReaderFactory::GetReader(&m_drf);
+	reader = ReaderFactory::GetReader(&m_readerFormat);
 	vtkPolyData *ppd = vtkPolyDataReader::SafeDownCast(reader)->GetOutput();
 
 	std::map<double, long> bins;
@@ -79,16 +75,18 @@ int PlotViewer::Setup()
 	return 1;
 }
 
-vtkSmartPointer<vtkContextView> PlotViewer::GetView() const
-{
-    return view;
-}
 
 void PlotViewer::InitializeRenderer()
 {
 	fprintf(stdout, "PlotViewer::InitializeRenderer() is unimplemented.\n");
 }
 
+void PlotViewer::Refresh() {}
+
+vtkSmartPointer<vtkContextView> PlotViewer::GetView() const
+{
+    return view;
+}
 //void PlotViewer::setView(vtkSmartPointer<vtkContextView> view)
 //{
 //    this->view = view;

@@ -19,7 +19,7 @@ PlotViewerMain::~PlotViewerMain() {
 
 int PlotViewerMain::Setup()
 {
-	m_plotViewer = new PlotViewer(m_drf);
+	m_plotViewer = new PlotViewer(m_drf, 640, 480);
 	this->SetupUi(this, m_drf);
 
 	if (m_plotViewer->Setup()){

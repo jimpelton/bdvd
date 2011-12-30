@@ -68,39 +68,26 @@ int readerOptions(DataReaderFormat *drf)
 	return 1;
 }
 
-int main(int argc, char* argv[])
+void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptions *viewOpts)
 {
-
-	QApplication app(argc, argv);
-	char *file;
-
-	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
-	ViewerOptions viewOpts = {1, 0.0, 0.0, 0.0};
-
-	if (strcmp(argv[1], "--help") == 0)
-	{
-		printUsage();
-		return 0;
-	}
-
 	int n;
 	if (CLParser::Init(argc, argv) > 1)
 	{
 		fprintf(stdout, "Reading commands...\n");
 
-		if (CLParser::ParseCL_s("polyfile", &(drf.fileName)))    //render binary poly data
+		if (CLParser::ParseCL_s("polyfile", &(drf->fileName)))    //render binary poly data
 		{
 			//drf.fileName = s;
-			drf.readerType = VV_POLY_DATA_READER;
-			drf.filePrefix = "unknown";
-			viewOpts.extractISOSurface = 0;
+			drf->readerType = VV_POLY_DATA_READER;
+			drf->filePrefix = "unknown";
+			viewOpts->mode = OPMODE_VIEW_SURFACE;
 		}
 		else if (CLParser::ParseCL_n("isoval", &n))    //extract an isovalue.
 		{
-			viewOpts.extractISOSurface = 1;
+			viewOpts->mode = OPMODE_VIEW_SURFACE;
 			DEFAULT_ISO_VALUE = n;
 
-			if (!readerOptions(&drf)) exit(0);
+			if (!readerOptions(drf)) exit(0);
 		}
 
 		/*
@@ -118,7 +105,24 @@ int main(int argc, char* argv[])
 		printUsage(extraMessage);
 		exit(0);
 	}
+}
 
+int main(int argc, char* argv[])
+{
+
+	QApplication app(argc, argv);
+	char *file;
+
+	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
+	ViewerOptions viewOpts = {OPMODE_VIEW_SURFACE};
+
+	parseCommandLine(argc, argv, &drf, &viewOpts);
+
+	if (strcmp(argv[1], "--help") == 0)
+	{
+		printUsage();
+		return 0;
+	}
 
 	drf.nSpacingX = 1;
 	drf.nSpacingY = 1;
