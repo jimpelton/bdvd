@@ -99,6 +99,8 @@ int readerOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 	return 1;
 }
 
+
+//TODO: plotsOptions() method to check plots specific options.
 void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptions *viewOpts)
 {
 	int n;
@@ -118,6 +120,7 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 		else if (CLParser::ParseCL_flag("extract"))
 		{
 			viewOpts->mode = OPMODE_BATCH_EXTRACT;
+
 		}
 		else if (CLParser::ParseCL_flag("plots"))
 		{

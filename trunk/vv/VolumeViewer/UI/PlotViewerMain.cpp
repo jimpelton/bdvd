@@ -15,6 +15,7 @@
 #include <vtkAlgorithmOutput.h>
 #include <vtkAlgorithm.h>
 #include <vtkPolyData.h>
+#include <vtkPolyDataAlgorithm.h>
 #include <vtkVariant.h>
 #include <vtkDataArray.h>
 #include <vtkLongArray.h>
@@ -39,54 +40,54 @@ int PlotViewerMain::Setup()
 	m_plotViewer = new PlotViewer(m_drf, 640, 480);
 	this->SetupUi(this, m_drf);
 
-
-
-	TriangleEdgeLength();
+	PlotTriangleEdgeLength();
 	m_plotViewer->InitializeRenderer();
-	InitializeRenderer();
+	InitializePlotViewer();
 
 	return 0;
 }
 
-void PlotViewerMain::InitializeRenderer()
+void PlotViewerMain::InitializePlotViewer()
 {
 	m_plotViewer->GetView()->SetInteractor(plotVtkWidget->GetInteractor());
 	plotVtkWidget->SetRenderWindow(m_plotViewer->GetView()->GetRenderWindow());
-	//m_plotViewer->InitializeRenderer();
 }
 
-
-
-void PlotViewerMain::TriangleEdgeLength()
+int PlotViewerMain::PlotTriangleEdgeLength()
 {
-	vtkSmartPointer<vtkDataArray> x = vtkSmartPointer<vtkDoubleArray>::New();
-	vtkSmartPointer<vtkDataArray> y = vtkSmartPointer<vtkLongArray>::New();
-	m_plotViewer->SetXArray(x);
-	m_plotViewer->SetYArray(y);
-
-	if (m_plotViewer->Setup()){
-		fprintf(stdout, "PlotViewerMain::TriangleEdgeLength(): Setup failed!\n");
-		return;
-	}
-
-	vtkSmartPointer<vtkTable> tbl = m_plotViewer->GetTable();
-
-
 	vtkSmartPointer<vtkAlgorithm> vao = ReaderFactory::GetReader(&m_drf);
-	vtkSmartPointer<vtkPolyData> pd = SurfaceUtil::ExtractSingleIsoSurface(vao->GetOutputPort(), 100, 0);
+	if (vao == NULL)
+	{
+		fprintf(stdout, "PlotViewerMain::TriangleEdgeLength(): The reader returned was null.\n");
+		return 0;
+	}
+	vtkSmartPointer<vtkPolyDataReader> asdf = vtkPolyDataReader::SafeDownCast(vao);
+	vtkSmartPointer<vtkPolyData> pd  = asdf->GetOutput();
+
 
 	std::map<double,long> bins;
 	SurfaceUtil::TriangleAvgEdgeLength(pd, &bins);
 
+	vtkSmartPointer<vtkDataArray> x = vtkSmartPointer<vtkDoubleArray>::New();
+	vtkSmartPointer<vtkDataArray> y = vtkSmartPointer<vtkLongArray>::New();
+	m_plotViewer->SetXArray(x);
+	m_plotViewer->SetYArray(y);
+	m_plotViewer->SetNumComponents(bins.size());
 
-	tbl->SetNumberOfRows(bins.size());
+
+	if (!m_plotViewer->Setup()){
+		fprintf(stdout, "PlotViewerMain::TriangleEdgeLength(): Setup of the PlotViewer object failed!\n");
+		return 0;
+	}
+
 	int row = 0;
 	for (std::map<double,long>::iterator iter = bins.begin(); iter != bins.end(); iter++)
 	{
 		vtkVariant dubskie = (*iter).first;
 		vtkVariant lngskie = (*iter).second;
-		tbl->SetValue(row, 0, dubskie);
-		tbl->SetValue(row, 1, lngskie);
+		m_plotViewer->SetRowValue(row, 0, dubskie);
+		m_plotViewer->SetRowValue(row, 1, lngskie);
 		row++;
 	}
+	return 1;
 }

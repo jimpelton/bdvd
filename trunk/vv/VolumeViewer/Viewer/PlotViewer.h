@@ -19,6 +19,9 @@
 #include <vtkChartXY.h>
 #include <vtkPlot.h>
 #include <vtkTable.h>
+#include <vtkType.h>
+#include <vtkVariant.h>
+
 
 
 class PlotViewer : Viewer {
@@ -34,6 +37,10 @@ private:
 	vtkSmartPointer<vtkPlot> line;
 	vtkSmartPointer<vtkAlgorithm> reader;
 
+	char *m_nameX;
+	char *m_nameY;
+
+	int m_numComponents;
 
 public:
 	PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight);
@@ -53,8 +60,10 @@ public:
 
     void SetXArray(vtkSmartPointer<vtkDataArray> arrX);
     void SetYArray(vtkSmartPointer<vtkDataArray> arrY);
-
-
+    void SetNumComponents(int n);
+    void SetRowValue(vtkIdType, vtkIdType, vtkVariant);
+    void SetXLabel(char *str);
+    void SetYLabel(char *str);
 };
 
 #endif /* PLOTVIEWER_H_ */

@@ -35,9 +35,9 @@ public:
 	virtual ~PlotViewerMain();
 
 	int Setup();
-	void InitializeRenderer();
+	void InitializePlotViewer();
 
-	void TriangleEdgeLength();
+	int PlotTriangleEdgeLength();
 
 
 };
