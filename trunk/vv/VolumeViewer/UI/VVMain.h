@@ -40,6 +40,7 @@ private:
 	IsoSurfaceViewer *viewer;
 	DataReaderFormat drf;
 	ViewerOptions m_vo;
+
 	int isoValue;
     double surfaceColor[3];
 
@@ -53,7 +54,7 @@ private:
     void fileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);
     void saveScreenShot(const char *s);
     void printSurfaceStats();
-    void iso_surface_mode();
+    void setup_isosurface_viewer();
 
 public:
 	VVMain(void);

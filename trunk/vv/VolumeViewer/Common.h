@@ -10,7 +10,7 @@
 *********************************************************************/
 #ifndef COMMON_H
 #define COMMON_H
-                                          ;
+
 extern int DEFAULT_SCREEN_WIDTH           ;
 extern int DEFAULT_SCREEN_HEIGHT          ;
                                           
