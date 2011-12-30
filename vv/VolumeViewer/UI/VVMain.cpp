@@ -102,7 +102,7 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
         double r[] = {m_vo.rotX, m_vo.rotY, m_vo.rotZ};
         viewer->SetRotate(r);
 
-        if (viewer->Setup()){
+        if (!viewer->Setup()){
             fprintf(stdout, "Setup failed!\n");
             return;
         }

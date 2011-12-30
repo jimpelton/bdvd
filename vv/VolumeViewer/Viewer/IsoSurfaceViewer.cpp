@@ -9,7 +9,7 @@
 
 #include "IsoSurfaceViewer.h"
 
-#define SETUP_SUCCESS 0
+#define SETUP_SUCCESS 1
 #define SETUP_FAILURE !SETUP_SUCCESS
 
 IsoSurfaceViewer::IsoSurfaceViewer(void){}
@@ -17,7 +17,7 @@ IsoSurfaceViewer::IsoSurfaceViewer(void){}
 
 IsoSurfaceViewer::IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int screenheight,
     int iso_val, int algorithm) : 
-    Viewer(drf,  screenwidth,  screenheight)
+    Viewer3D(drf,  screenwidth,  screenheight)
 {
     m_iso_value = iso_val;
     m_algorithm = algorithm;
@@ -26,8 +26,7 @@ IsoSurfaceViewer::IsoSurfaceViewer(DataReaderFormat & drf, int screenwidth, int 
 }
 
 
-IsoSurfaceViewer::~IsoSurfaceViewer(void)
-{}
+IsoSurfaceViewer::~IsoSurfaceViewer(void){}
 
 /*
  *  Setup the vtk pipeline, the marching cubes extractor, etc.
