@@ -35,26 +35,24 @@ protected:
     vtkSmartPointer<vtkFileOutputWindow> outFileWindow;
 	DataReaderFormat m_readerFormat;
 
-	virtual int viewer_setup() = 0;
-
 	Viewer(void);
 	Viewer(DataReaderFormat & drf, int screenwidth, int screenheight);
 	virtual ~Viewer(void);
 
 public:
+
 	//update the pipeline and re-render.
 	virtual void Refresh() = 0;
 
-	virtual void Start();
-	
 	//	Initialize the renderer.
 	virtual void InitializeRenderer() = 0;
-	/*
-	 *  Setup the vtk pipeline, the marching cubes extractor, etc.
-	 *  Chooses the correct reader from the DataReaderFormat.
-	 *  @return 0 on failure, 1 on success.
-	 */
+
+	//initialize this object at the users lesure.
+	//returns 1 if success, returns 0 if failure.
 	virtual int Setup() = 0;
+
+	virtual void Start();
+
 
 	/************************************************************************/
 	/*   Getters/Setters                                                    */

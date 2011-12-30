@@ -61,7 +61,7 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
 	viewer=NULL;
-	ViewerOptions tmpVO = {1, 0.0, 0.0, 0.0};
+	ViewerOptions tmpVO = {OPMODE_VIEW_SURFACE};
     init(readerFormat, tmpVO);
 }
 
@@ -93,25 +93,29 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
    
     this->SetupUi(this, drf);
 
-   // if (m_vo.extractISOSurface){
-        viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
-            isoValue, IsoSurfaceViewer::CON_FILTER );
+    switch(m_vo.mode)
+    {
+    case OPMODE_VIEW_SURFACE:
+    	iso_surface_mode();
+    	break;
+    default:
+    	break;
+    }
 
-        printSetup();
-
-        double r[] = {m_vo.rotX, m_vo.rotY, m_vo.rotZ};
-        viewer->SetRotate(r);
-
-        if (!viewer->Setup()){
-            fprintf(stdout, "Setup failed!\n");
-            return;
-        }
-
-        printSurfaceStats();
-
-  //  }
 }
 
+void VVMain::iso_surface_mode()
+{
+	viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
+			isoValue, IsoSurfaceViewer::CON_FILTER );
+
+	printSetup();
+
+	if (!viewer->Setup()){
+		fprintf(stdout, "Setup failed!\n");
+		return;
+	}
+}
 void VVMain::InitializeRenderer()
 {
      viewer->InitializeRenderer();   

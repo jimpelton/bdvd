@@ -35,7 +35,7 @@ void VolumeViewer::assignDefaults()
 int VolumeViewer::Setup()
 {
 
-	m_keypressStyle->SetCurrentRenderer(m_ren);
+	//m_keypressStyle->SetCurrentRenderer(m_ren);
 
 	volume = vtkSmartPointer<vtkVolume>::New();
 	

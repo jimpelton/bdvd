@@ -65,9 +65,6 @@ int IsoSurfaceViewer::Setup()
     vtkLODActor::SafeDownCast(surface)->SetNumberOfCloudPoints(100000);
     surface->GetProperty()->SetColor(m_surfaceColor[0], m_surfaceColor[1], m_surfaceColor[2]);
     surface->GetProperty()->SetOpacity(m_surfaceColor[3]);
-    surface->RotateX(m_rotXYZ[0]);
-    surface->RotateY(m_rotXYZ[1]);
-    surface->RotateZ(m_rotXYZ[2]);
 
     return SETUP_SUCCESS;
 }
