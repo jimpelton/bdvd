@@ -21,7 +21,12 @@ CLParser::CLParser() : args()
 
 CLParser::~CLParser()
 {
+}
 
+void CLParser::CleanUp()
+{
+	delete myself;
+	myself = NULL;
 }
 
 /**
@@ -42,21 +47,45 @@ int CLParser::Init(int argc, char *argv[])
 	while (i < argc)
 	{
 		std::string title = argv[i];
-		if (title.substr(0,2).compare("--") == 0)
+		if (title.substr(0,2).compare("--") == 0)  //long option
 		{
 			std::string next;
 			if (i+1 < argc){
 				i+=1;
 				next = argv[i];
-			}else return i;
-
-			if (next.substr(0,2).compare("--") == 0) //we have an option-less argument
+				if (next.substr(0,2).compare("--") == 0 || next.substr(0,1).compare("-") == 0) {  //we have an option-less argument
+					next = "FLAG";
+					i--;
+				}
+				myself->args[title.substr(2)] = next;
+			}else{
 				next = "FLAG";
-
-			myself->args[title.substr(2)] = next;
+				myself->args[title.substr(2)] = next;
+				return i;
+			}
 			i+=1;
 		}
-	}
+		else if (title.substr(0,1).compare("-") == 0) //short option
+		{
+			std::string next;
+			if (i+1 < argc)
+			{
+				i+=1;
+				next = argv[i];
+				if (next.substr(0,2).compare("--") == 0 || next.substr(0,1).compare("-") == 0) {  //we have an option-less argument
+					next = "FLAG";
+					i--;
+				}
+				myself->args[title.substr(1)] = next;
+			}else{
+				next = "FLAG";
+				myself->args[title.substr(1)] = next;
+				return i;
+			}
+			i+=1;
+		}
+
+	}//while
 	return i;
 }
 

@@ -12,6 +12,8 @@
 #include "ViewerOptions.h"
 #include "PlotViewer.h"
 #include "PlotViewerGui.h"
+#include "ViewerOptions.h"
+
 
 #include <QtGui/QMainWindow>
 #include <QtCore/QObject>
@@ -24,15 +26,20 @@ private:
 
 	PlotViewer *m_plotViewer;
 	DataReaderFormat m_drf;
+	ViewerOptions m_vopt;
 
 
 
 public:
-	PlotViewerMain(DataReaderFormat drf);
+	PlotViewerMain(DataReaderFormat drf, ViewerOptions vopt);
 	virtual ~PlotViewerMain();
 
 	int Setup();
 	void InitializeRenderer();
+
+	void TriangleEdgeLength();
+
+
 };
 
 #endif /* PLOTVIEWERMAIN_H_ */

@@ -16,7 +16,7 @@
 #ifndef VVGUI_H_
 #define VVGUI_H_
 
-#include "DataReaderFormat.h"
+#include "ViewerOptions.h"
 
 #include <QVTKWidget.h>
 #include <QtCore/QVariant>
@@ -98,7 +98,7 @@ public:
 
     QVTKWidget* GetVtkWidget();
 
-    void SetupUi(QMainWindow *GUI, DataReaderFormat&);
+    void SetupUi(QMainWindow *GUI, ViewerOptions&);
     
 
 };

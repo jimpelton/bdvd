@@ -49,8 +49,10 @@ public:
 
 
     vtkSmartPointer<vtkContextView> GetView() const;
-    //void setView(vtkSmartPointer<vtkContextView> view);
+    vtkSmartPointer<vtkTable> GetTable() const;
 
+    void SetXArray(vtkSmartPointer<vtkDataArray> arrX);
+    void SetYArray(vtkSmartPointer<vtkDataArray> arrY);
 
 
 };

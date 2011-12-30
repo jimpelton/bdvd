@@ -17,10 +17,30 @@
 #include "Common.h"
 
 #include <QtGui/QApplication>
+#include <qmainwindow.h>
 #include <stdlib.h>
 #include <string>
 #include <math.h>
 
+//////////Externed Globals from Common.h/////////////////////
+int DEFAULT_SCREEN_WIDTH  = 640;   //rener window width
+int DEFAULT_SCREEN_HEIGHT = 480;   //rener window height.
+
+int DEFAULT_WINDOW_WIDTH = 1280;
+int DEFAULT_WINDOW_HEIGHT = 720;
+
+int DEFAULT_INITIAL_COLOR_RED   = 228;
+int DEFAULT_INITIAL_COLOR_GREEN = 225;
+int DEFAULT_INITIAL_COLOR_BLUE  = 216;
+int DEFAULT_INITIAL_COLOR_ALPHA = 255;
+
+int DEFAULT_INITIAL_ISO_SLIDER_MAX = 255;
+int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
+int DEFAULT_ISO_VALUE = 55;
+////////////////////////////////////////////////////////////
+
+
+QMainWindow *gui = NULL;
 
 void printUsage(char *extraMessage = NULL)
 {
@@ -48,14 +68,26 @@ void printUsage(char *extraMessage = NULL)
     }
 }
 
-int readerOptions(DataReaderFormat *drf)
+int readerOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 {
-	if (CLParser::ParseCL_s("bmpprefix", &(drf->filePrefix)))     //
+	if (CLParser::ParseCL_s("polyfile", &(drf->fileName)))    //render binary poly data
+	{
+		viewOpts->mode = OPMODE_VIEW_POLYDATA;
+		drf->readerType = VV_POLY_DATA_READER;
+		drf->filePrefix = "unknown";
+	}
+	else if (CLParser::ParseCL_s("bmpprefix", &(drf->filePrefix)))     //
 	{
 		drf->readerType = VV_MULTI_BMP_READER;
 		drf->fileName = "unknown";
+		drf->nSpacingX = 1;
+		drf->nSpacingY = 1;
+		drf->nSpacingZ = 1;
+		drf->fileByteOrder = VV_BIG_ENDIAN;
 
-		if ( (CLParser::ParseCL_n("xsize",     &(drf->dimX))      &&
+		if (CLParser::ParseCL_flag("use8bit")) drf->is8Bit = 1;
+
+		if ( (CLParser::ParseCL_n("xsize",   &(drf->dimX))        &&
 			  CLParser::ParseCL_n("ysize",   &(drf->dimY))        &&
 			  CLParser::ParseCL_n("imgstart",&(drf->imgRngStart)) &&
 			  CLParser::ParseCL_n("imgend",  &(drf->imgRngEnd)))  == false)
@@ -63,7 +95,6 @@ int readerOptions(DataReaderFormat *drf)
 			printUsage("Either xsize, ysize, imgstart or imgend was missing or malformed.\n");
 			return 0;
 		}
-		CLParser::ParseCL_n("use8bit", &(drf->is8Bit));
 	}
 	return 1;
 }
@@ -75,19 +106,24 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 	{
 		fprintf(stdout, "Reading commands...\n");
 
-		if (CLParser::ParseCL_s("polyfile", &(drf->fileName)))    //render binary poly data
+		if (CLParser::ParseCL_flag("surface"))
 		{
-			//drf.fileName = s;
-			drf->readerType = VV_POLY_DATA_READER;
-			drf->filePrefix = "unknown";
-			viewOpts->mode = OPMODE_VIEW_SURFACE;
+			if (CLParser::ParseCL_n("isoval", &n))              //extract an isovalue from vol data.
+			{
+				viewOpts->mode = OPMODE_EXTRACT_AND_VIEW_SURFACE;
+				DEFAULT_ISO_VALUE = n;
+				if (!readerOptions(drf,viewOpts)) exit(0);
+			}
+		}//surface
+		else if (CLParser::ParseCL_flag("extract"))
+		{
+			viewOpts->mode = OPMODE_BATCH_EXTRACT;
 		}
-		else if (CLParser::ParseCL_n("isoval", &n))    //extract an isovalue.
+		else if (CLParser::ParseCL_flag("plots"))
 		{
-			viewOpts->mode = OPMODE_VIEW_SURFACE;
-			DEFAULT_ISO_VALUE = n;
-
-			if (!readerOptions(drf)) exit(0);
+			viewOpts->mode = OPMODE_VIEW_PLOTS;
+			if (!readerOptions(drf, viewOpts)) exit(0);
+			gui = new PlotViewerMain(*drf, *viewOpts);
 		}
 
 		/*
@@ -114,7 +150,7 @@ int main(int argc, char* argv[])
 	char *file;
 
 	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
-	ViewerOptions viewOpts = {OPMODE_VIEW_SURFACE};
+	ViewerOptions viewOpts = {OPMODE_EXTRACT_AND_VIEW_SURFACE};
 
 	parseCommandLine(argc, argv, &drf, &viewOpts);
 
@@ -124,10 +160,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	drf.nSpacingX = 1;
-	drf.nSpacingY = 1;
-	drf.nSpacingZ = 1;
-	drf.fileByteOrder = VV_BIG_ENDIAN;
+
 
 	fprintf(stdout, "Starting GUI...\n");
 	//PlotViewerMain pvm(drf);
@@ -135,10 +168,12 @@ int main(int argc, char* argv[])
 	//pvm.show();
 	//app.exec();
 
-	VVMain gui(drf, viewOpts);
-	gui.InitializeRenderer();
-	gui.show();
+	if (gui == NULL) gui = new VVMain(drf, viewOpts);
+	gui->show();
 	app.exec();
+
+	delete gui;
+	CLParser::CleanUp();
 
 	return 0;
 }

@@ -28,6 +28,7 @@ private:
 
 public:
 	static int Init(int, char**);
+	static void CleanUp();
 
 
 	static bool ParseCL_n(const char * src , int* dst);

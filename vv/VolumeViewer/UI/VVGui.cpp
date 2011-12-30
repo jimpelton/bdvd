@@ -12,6 +12,7 @@
 
 
 #include "VVGui.h"
+
 #include "Common.h"
 
 VVGui::VVGui(void)
@@ -28,7 +29,7 @@ QVTKWidget* VVGui::GetVtkWidget()
 
 
 
-void VVGui::SetupUi(QMainWindow *MainWindow, DataReaderFormat &drf)
+void VVGui::SetupUi(QMainWindow *MainWindow, ViewerOptions &vopts)
 {
     if (MainWindow->objectName().isEmpty())
         MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
@@ -66,7 +67,7 @@ void VVGui::SetupUi(QMainWindow *MainWindow, DataReaderFormat &drf)
     setupColorSliders();
     leftVerticalLayout->addLayout(gridLayout);
     leftColorIsoFrame->setLayout(leftVerticalLayout);
-    isoSlider->setDisabled( drf.readerType == VV_POLY_DATA_READER );
+    isoSlider->setEnabled( vopts.mode == OPMODE_EXTRACT_AND_VIEW_SURFACE);
     
 
     centralWidgetHBoxLayout->addWidget(leftColorIsoFrame);

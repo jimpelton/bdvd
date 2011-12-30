@@ -34,20 +34,7 @@
 
 //int ISO_SURFACE = 1;
 
-int DEFAULT_SCREEN_WIDTH  = 640;   //rener window width
-int DEFAULT_SCREEN_HEIGHT = 480;   //rener window height.
 
-int DEFAULT_WINDOW_WIDTH = 1280;   
-int DEFAULT_WINDOW_HEIGHT = 720;
-
-int DEFAULT_INITIAL_COLOR_RED   = 228;
-int DEFAULT_INITIAL_COLOR_GREEN = 225;
-int DEFAULT_INITIAL_COLOR_BLUE  = 216;
-int DEFAULT_INITIAL_COLOR_ALPHA = 255;
-
-int DEFAULT_INITIAL_ISO_SLIDER_MAX = 255;
-int DEFAULT_INITIAL_ISO_SLIDER_MIN = 1;
-int DEFAULT_ISO_VALUE = 55;
 
 /*
  *  The default name to append to the polydata file name
@@ -61,7 +48,7 @@ char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 VVMain::VVMain(DataReaderFormat readerFormat)
 {
 	viewer=NULL;
-	ViewerOptions tmpVO = {OPMODE_VIEW_SURFACE};
+	ViewerOptions tmpVO = {OPMODE_EXTRACT_AND_VIEW_SURFACE};
     init(readerFormat, tmpVO);
 }
 
@@ -91,20 +78,21 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
     surfaceColor[0] = surfaceColor[1] = surfaceColor[2] = 1.0;
     isoValue = DEFAULT_ISO_VALUE;
    
-    this->SetupUi(this, drf);
+    this->SetupUi(this, m_vo);
 
     switch(m_vo.mode)
     {
-    case OPMODE_VIEW_SURFACE:
-    	iso_surface_mode();
+    case OPMODE_VIEW_POLYDATA:
+    case OPMODE_EXTRACT_AND_VIEW_SURFACE:
+    	setup_isosurface_viewer();
     	break;
-    default:
+   default:
     	break;
     }
-
+    InitializeRenderer();
 }
 
-void VVMain::iso_surface_mode()
+void VVMain::setup_isosurface_viewer()
 {
 	viewer = new IsoSurfaceViewer(drf, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
 			isoValue, IsoSurfaceViewer::CON_FILTER );
@@ -116,6 +104,8 @@ void VVMain::iso_surface_mode()
 		return;
 	}
 }
+
+
 void VVMain::InitializeRenderer()
 {
      viewer->InitializeRenderer();   
