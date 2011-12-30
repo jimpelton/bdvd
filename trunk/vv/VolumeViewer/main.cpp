@@ -8,11 +8,13 @@
 #include <Windows.h>
 #endif
 
-#include "Common.h"
+
 #include "VVMain.h"
+#include "PlotViewerMain.h"
 #include "DataReaderFormat.h"
 #include "ViewerOptions.h"
 #include "CLParser.h"
+#include "Common.h"
 
 #include <QtGui/QApplication>
 #include <stdlib.h>
@@ -71,6 +73,7 @@ int main(int argc, char* argv[])
 
 	QApplication app(argc, argv);
 	char *file;
+
 	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
 	ViewerOptions viewOpts = {1, 0.0, 0.0, 0.0};
 
@@ -123,6 +126,11 @@ int main(int argc, char* argv[])
 	drf.fileByteOrder = VV_BIG_ENDIAN;
 
 	fprintf(stdout, "Starting GUI...\n");
+	//PlotViewerMain pvm(drf);
+	//pvm.InitializeRenderer();
+	//pvm.show();
+	//app.exec();
+
 	VVMain gui(drf, viewOpts);
 	gui.InitializeRenderer();
 	gui.show();

@@ -17,16 +17,11 @@
 #include <vtkOutputWindow.h>
 #include <vtkFileOutputWindow.h>
 
-#include <vtkCamera.h>
-#include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderWindowInteractor.h>
-#include <vtkInteractorStyleTrackballCamera.h>
-
-const float  DEFAULT_AMBIENT  = 0.1;
-const float  DEFAULT_DIFFUSE  = 0.4;
-const float  DEFAULT_SPECULAR = 0.3;
-
+//#include <vtkCamera.h>
+//#include <vtkRenderer.h>
+//#include <vtkRenderWindow.h>
+//#include <vtkRenderWindowInteractor.h>
+//#include <vtkInteractorStyleTrackballCamera.h>
 
 
 class Viewer
@@ -36,37 +31,30 @@ private:
 	int m_screenHeight;
 
 protected:
-
-	vtkSmartPointer<vtkCamera> m_camera;
-	vtkSmartPointer<vtkRenderer> m_ren;
-	vtkSmartPointer<vtkRenderWindow> m_renWin;
-	vtkSmartPointer<vtkRenderWindowInteractor> m_iren;
-
     vtkSmartPointer<vtkOutputWindow> outwin;
     vtkSmartPointer<vtkFileOutputWindow> outFileWindow;
-
 	DataReaderFormat m_readerFormat;
 
-	double m_dAmbient;
-	double m_dDiffuse;
-	double m_dSpecular;
+	virtual int viewer_setup() = 0;
 
-
-	int setup();
-
-public:
 	Viewer(void);
 	Viewer(DataReaderFormat & drf, int screenwidth, int screenheight);
 	virtual ~Viewer(void);
 
+public:
 	//update the pipeline and re-render.
-	void Refresh();
+	virtual void Refresh() = 0;
 
 	virtual void Start();
 	
 	//	Initialize the renderer.
 	virtual void InitializeRenderer() = 0;
-
+	/*
+	 *  Setup the vtk pipeline, the marching cubes extractor, etc.
+	 *  Chooses the correct reader from the DataReaderFormat.
+	 *  @return 0 on failure, 1 on success.
+	 */
+	virtual int Setup() = 0;
 
 	/************************************************************************/
 	/*   Getters/Setters                                                    */
@@ -77,20 +65,6 @@ public:
 	
 	 int ScreenHeight() const;
 	 void ScreenHeight(int val);
-	
-	 double Ambient() const;
-	 void Ambient(double val);
-	
-	 double Specular() const;
-	 void Specular(double val);
-	
-	 double Diffuse() const;
-	 void Diffuse(double val);
-
-	vtkSmartPointer<vtkRenderWindow> RenWin() const;
-	void RenWin(vtkSmartPointer<vtkRenderWindow> val);
-        
-	
 };
 #endif
 

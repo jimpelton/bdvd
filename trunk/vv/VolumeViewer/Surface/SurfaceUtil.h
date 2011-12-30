@@ -19,12 +19,16 @@
 #include <vtkTriangle.h>
 #include <vtkPoints.h>
 #include <vtkLine.h>
+#include <vtkAlgorithmOutput.h>
+#include <vtkMarchingCubes.h>
+#include <vtkSmartPointer.h>
 
 #include <map>
 
 class SurfaceUtil
 {
-public:
+private:
+
 
 
 public:
@@ -35,8 +39,8 @@ public:
     //static void CellArray(vtkPolyData *);
     static double SurfaceArea(vtkPolyData *);
     static double TriangleAvgEdgeLength(vtkPolyData* surface, std::map<double, long> *bins = NULL);
-
-
+    static vtkSmartPointer<vtkPolyData> ExtractSingleIsoSurface(vtkAlgorithmOutput *volData, int ival, int normals);
+    static int BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData, int *ivals, int ivalsLength, char *fname);
 };
 
 #endif // SURFACEUTIL_H

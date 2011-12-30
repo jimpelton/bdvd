@@ -19,6 +19,8 @@ public:
     int SaveIsoSurfacePolyData(vtkPolyData *data, const char * filename);
     vtkPolyData *ReadIsoSurfacePolyData( const char * filename);
     void SaveScreenShot(vtkRenderWindow *renwin, const char* filename);
+
+    //void FileWriter::FileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);
 };
 
 #endif // FILEWRITER_H

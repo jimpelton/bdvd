@@ -17,7 +17,7 @@
 Viewer::Viewer(void)
 {}
 
-Viewer::Viewer(DataReaderFormat & drf, int screenwidth, int screenheight)
+Viewer::Viewer(DataReaderFormat &drf, int screenwidth, int screenheight)
 {
     m_readerFormat = drf;
     m_screenWidth = screenwidth;
@@ -29,51 +29,10 @@ Viewer::Viewer(DataReaderFormat & drf, int screenwidth, int screenheight)
 
     if (outwin) outwin->SetInstance(outFileWindow);
 
-    setup();
+    //viewer_setup();
 }
 
 Viewer::~Viewer(void){}
-
-/**
- *   protected method called from Viewer's constructor.
- *   Inits the renderer, render window, interactor, camera.
- *  
- *  @return always returns 1
- */
-int Viewer::setup(){
-
-    //rendering setup
-    m_ren = vtkSmartPointer<vtkRenderer>::New();
-
-    m_renWin = vtkSmartPointer<vtkRenderWindow>::New();
-    m_renWin->AddRenderer(m_ren);
-
-    m_iren = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-
-    m_camera = vtkSmartPointer<vtkCamera>::New();
-    m_ren->SetActiveCamera(m_camera);
-
-
-    m_dAmbient  = DEFAULT_AMBIENT;
-    m_dDiffuse  = DEFAULT_DIFFUSE;
-    m_dSpecular = DEFAULT_SPECULAR;
-
-    return 1;
-}
-
-/*
- *  Calls RenWin()->Render(), which updates the vtk pipeline and re-renders the
- *  scene.
- */
-void Viewer::Refresh()
-{
-    RenWin()->Render();
-    RenWin()->CheckGraphicError();
-    const char *er = RenWin()->GetLastGraphicErrorString();
-    if (er){
-        fprintf(stdout, "Viewer::Refresh RESULT: %s\n", er);
-    }
-}
 
 
 
@@ -100,50 +59,6 @@ void Viewer::ScreenHeight( int val )
 {
     m_screenHeight = val;
 }
-
-double Viewer::Ambient() const
-{
-    return m_dAmbient;
-}
-
-void Viewer::Ambient( double val )
-{
-    m_dAmbient = val;
-
-}
-
-double Viewer::Diffuse() const
-{
-    return m_dDiffuse;
-}
-
-void Viewer::Diffuse( double val )
-{
-    m_dDiffuse = val;
-
-}
-
-double Viewer::Specular() const
-{
-    return m_dSpecular;
-}
-
-void Viewer::Specular( double val )
-{
-    m_dSpecular = val;
-}
-
-
-vtkSmartPointer<vtkRenderWindow> Viewer::RenWin() const
-{
-    return m_renWin;
-}
-
-void Viewer::RenWin( vtkSmartPointer<vtkRenderWindow> val )
-{
-    m_renWin = val;
-}
-
 
 /*
 *  Start the render loop.

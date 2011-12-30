@@ -2,6 +2,7 @@
 
 #include "FileWriter.h"
 
+
 FileWriter::FileWriter()
 {
 }
@@ -70,3 +71,10 @@ void FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
 	  writer->Delete();
 
 }
+
+//void FileWriter::FileNameTimeString_MMDDHMS(char *timeName, int timeNameLength)
+//{
+//	time_t theTime = time(0);
+//	tm * now = localtime(&theTime);
+//	strftime(timeName, timeNameLength*sizeof(char), "_%m%d_%H%M%S_", now);  //MMDD_HHMMSS_
+//};

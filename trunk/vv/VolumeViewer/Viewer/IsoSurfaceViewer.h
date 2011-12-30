@@ -12,7 +12,8 @@
 #ifndef ISOSURFACEVIEWER_H_
 #define ISOSURFACEVIEWER_H_
 
-#include "Viewer.h"
+//#include "Viewer.h"
+#include "Viewer3D.h"
 #include "FileWriter.h"
 #include "ReaderFactory.h"
 
@@ -35,7 +36,9 @@
 #include <vtkDataSetMapper.h>
 #include <vtkCubeAxesActor.h>
 
-class IsoSurfaceViewer : public Viewer
+class Viewer3D;
+
+class IsoSurfaceViewer : public Viewer3D
 {
 
 private:
@@ -73,6 +76,8 @@ public:
 
 	int Setup();
 	void InitializeRenderer();
+	//void Refresh();
+
 
 /************************************************************************/
 /*     Getters/Setters                                                  */
