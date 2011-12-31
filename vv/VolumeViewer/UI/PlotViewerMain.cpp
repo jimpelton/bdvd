@@ -47,12 +47,18 @@ int PlotViewerMain::Setup()
 	return 0;
 }
 
+
+
 void PlotViewerMain::InitializePlotViewer()
 {
 	m_plotViewer->GetView()->SetInteractor(plotVtkWidget->GetInteractor());
 	plotVtkWidget->SetRenderWindow(m_plotViewer->GetView()->GetRenderWindow());
 }
 
+/**
+ *
+ * @return 1 on success 0 on failure
+ */
 int PlotViewerMain::PlotTriangleEdgeLength()
 {
 	vtkSmartPointer<vtkAlgorithm> vao = ReaderFactory::GetReader(&m_drf);
@@ -72,8 +78,9 @@ int PlotViewerMain::PlotTriangleEdgeLength()
 	vtkSmartPointer<vtkDataArray> y = vtkSmartPointer<vtkLongArray>::New();
 	m_plotViewer->SetXArray(x);
 	m_plotViewer->SetYArray(y);
+	m_plotViewer->SetXName("edge_length");
+	m_plotViewer->SetYName("freq");
 	m_plotViewer->SetNumComponents(bins.size());
-
 
 	if (!m_plotViewer->Setup()){
 		fprintf(stdout, "PlotViewerMain::TriangleEdgeLength(): Setup of the PlotViewer object failed!\n");

@@ -18,11 +18,8 @@ PlotViewer::PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight,
 		vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr) :
 		Viewer(drf, screenWidth, screenHeight), m_numComponents(0)
 {
-	if (xarr != NULL && yarr != NULL)
-	{
 		m_arrX = xarr;
 		m_arrY = yarr;
-	}
 }
 
 
@@ -43,8 +40,8 @@ int PlotViewer::Setup()
 		fprintf(stdout, "PlotViewer::Setup(): Please set the number of components by calling SetNumberOfRows(int).\n");
 	}
 
-	m_arrX->SetName("x axis");
-	m_arrY->SetName("y axis");
+	m_arrX->SetName(m_nameX);
+	m_arrY->SetName(m_nameY);
 
 	table->AddColumn(m_arrX);
 	table->AddColumn(m_arrY);
@@ -104,12 +101,12 @@ void PlotViewer::SetRowValue(vtkIdType row, vtkIdType col, vtkVariant val)
 	table->SetValue(row, col, val);
 }
 
-void PlotViewer::SetXLabel(char *str)
+void PlotViewer::SetXName(char *str)
 {
 	m_nameX = str;
 }
 
-void PlotViewer::SetYLabel(char *str)
+void PlotViewer::SetYName(char *str)
 {
 	m_nameY = str;
 }
