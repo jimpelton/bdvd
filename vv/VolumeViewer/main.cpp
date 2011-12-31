@@ -42,6 +42,8 @@ int DEFAULT_ISO_VALUE = 55;
 
 QMainWindow *gui = NULL;
 
+OpMode plotMode(char *);
+
 void printUsage(char *extraMessage = NULL)
 {
     char *s = 
@@ -101,7 +103,20 @@ int readerOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 
 int extractOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 {
+	fprintf(stdout, "Extraction not supported right now. Exiting...\n");
+	exit(0);
+}
 
+int plotsOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
+{
+	char *s;
+	if (CLParser::ParseCL_s("type", &s))
+	{
+		viewOpts->mode = plotMode(s);
+	}
+	CLParser::ParseCL_s("polyfile", &(drf->fileName));
+	CLParser::ParseCL_s("prefix", &(drf->filePrefix));
+	CLParser::ParseCL_s("outdir", &(viewOpts->outDir));
 }
 
 //TODO: plotsOptions() method to check plots specific options.
@@ -118,19 +133,20 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 			{
 				viewOpts->mode = OPMODE_EXTRACT_AND_VIEW_SURFACE;
 				DEFAULT_ISO_VALUE = n;
-				if (!readerOptions(drf,viewOpts)) exit(0);
+
 			}
+			if (!readerOptions(drf,viewOpts)) exit(0);
 		}//surface
 		else if (CLParser::ParseCL_flag("extract"))
 		{
-			viewOpts->mode = OPMODE_BATCH_EXTRACT;
+			viewOpts->mode = OPMODE_EXTRACT_BATCH;
 			if (!readerOptions(drf, viewOpts)) exit(0);
 			if (!extractOptions(drf,viewOpts)) exit(0);
 
 		}
 		else if (CLParser::ParseCL_flag("plots"))
 		{
-			viewOpts->mode = OPMODE_VIEW_PLOTS;
+//			viewOpts->mode = OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
 			if (!readerOptions(drf, viewOpts)) exit(0);
 			gui = new PlotViewerMain(*drf, *viewOpts);
 		}
@@ -152,6 +168,16 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 	}
 }
 
+OpMode plotMode(char *s)
+{
+	std::string str = s;
+	if (str.compare("TriangleAverages")==0) return OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
+	if (str.compare("BatchTriangleAverages") == 0) return OPMODE_PLOTS_BATCH_TRIANGLE_AVERAGES;
+	if (str.compare("SurfaceArea") == 0) return OPMODE_PLOT_VIEW_SURFACE_AREAS;
+
+	return OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -159,7 +185,7 @@ int main(int argc, char* argv[])
 	char *file;
 
 	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
-	ViewerOptions viewOpts = {OPMODE_EXTRACT_AND_VIEW_SURFACE};
+	ViewerOptions viewOpts = {OPMODE_EXTRACT_AND_VIEW_SURFACE, NULL};
 
 	parseCommandLine(argc, argv, &drf, &viewOpts);
 
