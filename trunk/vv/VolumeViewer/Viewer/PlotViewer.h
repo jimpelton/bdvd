@@ -62,8 +62,8 @@ public:
     void SetYArray(vtkSmartPointer<vtkDataArray> arrY);
     void SetNumComponents(int n);
     void SetRowValue(vtkIdType, vtkIdType, vtkVariant);
-    void SetXLabel(char *str);
-    void SetYLabel(char *str);
+    void SetXName(char *str);
+    void SetYName(char *str);
 };
 
 #endif /* PLOTVIEWER_H_ */

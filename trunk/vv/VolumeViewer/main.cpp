@@ -99,6 +99,10 @@ int readerOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 	return 1;
 }
 
+int extractOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
+{
+
+}
 
 //TODO: plotsOptions() method to check plots specific options.
 void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptions *viewOpts)
@@ -120,6 +124,8 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 		else if (CLParser::ParseCL_flag("extract"))
 		{
 			viewOpts->mode = OPMODE_BATCH_EXTRACT;
+			if (!readerOptions(drf, viewOpts)) exit(0);
+			if (!extractOptions(drf,viewOpts)) exit(0);
 
 		}
 		else if (CLParser::ParseCL_flag("plots"))
@@ -163,13 +169,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-
-
 	fprintf(stdout, "Starting GUI...\n");
-	//PlotViewerMain pvm(drf);
-	//pvm.InitializeRenderer();
-	//pvm.show();
-	//app.exec();
 
 	if (gui == NULL) gui = new VVMain(drf, viewOpts);
 	gui->show();
