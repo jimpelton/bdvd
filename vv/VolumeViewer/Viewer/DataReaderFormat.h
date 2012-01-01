@@ -31,18 +31,17 @@ enum ByteOrderType
 struct DataReaderFormat
 {
 	DataReaderType readerType;
-    //int readerType;
 	int dimX;
 	int dimY;
 	int imgRngStart;
 	int imgRngEnd;
 	int fileByteOrder;
-    char * filePrefix;
-	char * fileName;
 	int nSpacingX;
 	int nSpacingY;
 	int nSpacingZ;
 	int is8Bit;
+	char * filePrefix;
+	char * fileName;
 };
 
 #endif

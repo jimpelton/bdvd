@@ -28,7 +28,10 @@ private:
 	DataReaderFormat m_drf;
 	ViewerOptions m_vopt;
 
-
+	//int (*PlotViewerMain::plot)();
+	int choosePlot();
+	int plotTriangleEdgeLength();
+	int plotSurfaceAreas();
 
 public:
 	PlotViewerMain(DataReaderFormat drf, ViewerOptions vopt);
@@ -36,9 +39,6 @@ public:
 
 	int Setup();
 	void InitializePlotViewer();
-
-	int PlotTriangleEdgeLength();
-
 
 };
 

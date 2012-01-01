@@ -21,8 +21,8 @@ SurfaceUtil::SurfaceUtil()
 }
 
 /**
- * Compute the average length of all of the triangles in the surface.
- * If bins is given then every avg. length is binned into the map with the length as the
+ * Compute the average edge length of all of the triangles in the surface.
+ * If bins is given then every avg. length is binned with the length as the
  * key and the frequency of the length as the mapped value.
  *
  * @param pd the polydata of the surface.
@@ -141,3 +141,5 @@ int SurfaceUtil::BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData, int 
 	return i;
 
 }
+
+
