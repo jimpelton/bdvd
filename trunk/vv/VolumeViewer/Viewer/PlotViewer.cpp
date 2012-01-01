@@ -30,6 +30,9 @@ int PlotViewer::Setup()
 {
 	view = vtkSmartPointer<vtkContextView>::New();
 	table = vtkSmartPointer<vtkTable>::New();
+	title = vtkSmartPointer<vtkTextWidget>::New();
+
+
 
 	if (m_arrX == NULL || m_arrY == NULL){
 		fprintf(stdout, "PlotViewer::Setup(): Arrays where null, you should call SetXArray()/SetYArray() before Setup().\n");

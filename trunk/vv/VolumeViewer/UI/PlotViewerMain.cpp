@@ -54,7 +54,7 @@ int PlotViewerMain::Setup()
 	}
 	InitializePlotViewer();
 
-	return 0;
+	return 1;
 }
 
 void PlotViewerMain::InitializePlotViewer()

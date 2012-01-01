@@ -22,14 +22,13 @@
 #include <vtkType.h>
 #include <vtkVariant.h>
 
-
+#include <vtkTextWidget.h>
 
 class PlotViewer : Viewer {
 
 private:
 
 	vtkSmartPointer<vtkContextView> view;
-	//vtkSmartPointer<vtkQtTableView> tableView;
 	vtkSmartPointer<vtkTable> table;
 	vtkSmartPointer<vtkDataArray> m_arrX;
 	vtkSmartPointer<vtkDataArray> m_arrY;
@@ -66,6 +65,7 @@ public:
     void SetXName(char *str);
     void SetYName(char *str);
     void SetChartType(int t);
+
 };
 
 #endif /* PLOTVIEWER_H_ */
