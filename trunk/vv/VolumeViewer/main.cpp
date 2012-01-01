@@ -42,7 +42,7 @@ int DEFAULT_ISO_VALUE = 55;
 
 QMainWindow *gui = NULL;
 
-OpMode plotMode(char *);
+int plotMode(char *);
 
 void printUsage(char *extraMessage = NULL)
 {
@@ -74,7 +74,7 @@ int readerOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 {
 	if (CLParser::ParseCL_s("polyfile", &(drf->fileName)))    //render binary poly data
 	{
-		viewOpts->mode = OPMODE_VIEW_POLYDATA;
+		viewOpts->mode = OpMode::VIEW_POLYDATA;
 		drf->readerType = VV_POLY_DATA_READER;
 		drf->filePrefix = "unknown";
 	}
@@ -114,9 +114,20 @@ int plotsOptions(DataReaderFormat *drf, ViewerOptions *viewOpts)
 	{
 		viewOpts->mode = plotMode(s);
 	}
-	CLParser::ParseCL_s("polyfile", &(drf->fileName));
-	CLParser::ParseCL_s("prefix", &(drf->filePrefix));
-	CLParser::ParseCL_s("outdir", &(viewOpts->outDir));
+	CLParser::ParseCL_s("polyfile",  &(drf->filePrefix));
+	CLParser::ParseCL_s("outdir",   &(viewOpts->outDir));
+
+	return 1;
+}
+
+int plotMode(char *s)
+{
+	std::string str = s;
+	if (str.compare("TriangleAverageEdgeFreq")==0) return OpMode::PLOT_VIEW_TRIANGLE_AVERAGES;
+	if (str.compare("BatchTriangleAverageEdgeFreq") == 0) return OpMode::PLOTS_BATCH_TRIANGLE_AVERAGES;
+	if (str.compare("IsoValueSurfaceAreas") == 0)  return OpMode::PLOT_VIEW_SURFACE_AREAS;
+
+	return OpMode::PLOT_VIEW_TRIANGLE_AVERAGES;
 }
 
 //TODO: plotsOptions() method to check plots specific options.
@@ -131,7 +142,7 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 		{
 			if (CLParser::ParseCL_n("isoval", &n))              //extract an isovalue from vol data.
 			{
-				viewOpts->mode = OPMODE_EXTRACT_AND_VIEW_SURFACE;
+				viewOpts->mode = OpMode::EXTRACT_AND_VIEW_SURFACE;
 				DEFAULT_ISO_VALUE = n;
 
 			}
@@ -139,7 +150,7 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 		}//surface
 		else if (CLParser::ParseCL_flag("extract"))
 		{
-			viewOpts->mode = OPMODE_EXTRACT_BATCH;
+			viewOpts->mode = OpMode::EXTRACT_BATCH;
 			if (!readerOptions(drf, viewOpts)) exit(0);
 			if (!extractOptions(drf,viewOpts)) exit(0);
 
@@ -148,6 +159,7 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 		{
 //			viewOpts->mode = OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
 			if (!readerOptions(drf, viewOpts)) exit(0);
+			if (!plotsOptions(drf, viewOpts)) exit(0);
 			gui = new PlotViewerMain(*drf, *viewOpts);
 		}
 
@@ -168,15 +180,7 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 	}
 }
 
-OpMode plotMode(char *s)
-{
-	std::string str = s;
-	if (str.compare("TriangleAverages")==0) return OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
-	if (str.compare("BatchTriangleAverages") == 0) return OPMODE_PLOTS_BATCH_TRIANGLE_AVERAGES;
-	if (str.compare("SurfaceArea") == 0) return OPMODE_PLOT_VIEW_SURFACE_AREAS;
 
-	return OPMODE_PLOT_VIEW_TRIANGLE_AVERAGES;
-}
 
 int main(int argc, char* argv[])
 {
@@ -184,8 +188,8 @@ int main(int argc, char* argv[])
 	QApplication app(argc, argv);
 	char *file;
 
-	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, NULL, NULL, -1, -1, -1, 1};
-	ViewerOptions viewOpts = {OPMODE_EXTRACT_AND_VIEW_SURFACE, NULL};
+	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, -1, -1, -1, 1, "unknown", "unknown"};
+	ViewerOptions viewOpts = {OpMode::EXTRACT_AND_VIEW_SURFACE, NULL};
 
 	parseCommandLine(argc, argv, &drf, &viewOpts);
 

@@ -37,15 +37,14 @@ int FileWriter::SaveIsoSurfacePolyData(vtkPolyData *vpd, const  char * fname)
  * @return NULL if the file isn't a valid polydata file or the
  *         vtkPolyData if the file is a vtk polydata file.
  */
-vtkPolyData *FileWriter::ReadIsoSurfacePolyData(const char *fileName)
+vtkSmartPointer<vtkPolyData> FileWriter::ReadIsoSurfacePolyData(const char *fileName)
 {
-    vtkPolyDataReader *reader = vtkPolyDataReader::New();
-    reader->SetFileName(fileName);
-    if (!reader->IsFilePolyData()) return NULL;
-    reader->Update();
-    vtkPolyData *data = reader->GetOutput();
-    reader->Delete();
-    return data;
+	vtkSmartPointer<vtkPolyDataReader> reader = vtkSmartPointer<vtkPolyDataReader>::New();
+	reader->SetFileName(fileName);
+	if (!reader->IsFilePolyData()) return NULL;
+	reader->Update();
+	vtkPolyData *data = reader->GetOutput();
+	return data;
 }
 
 /**

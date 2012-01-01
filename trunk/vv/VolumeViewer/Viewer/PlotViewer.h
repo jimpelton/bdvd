@@ -41,6 +41,7 @@ private:
 	char *m_nameY;
 
 	int m_numComponents;
+	int m_chartType;
 
 public:
 	PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight);
@@ -64,6 +65,7 @@ public:
     void SetRowValue(vtkIdType, vtkIdType, vtkVariant);
     void SetXName(char *str);
     void SetYName(char *str);
+    void SetChartType(int t);
 };
 
 #endif /* PLOTVIEWER_H_ */

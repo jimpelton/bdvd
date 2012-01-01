@@ -9,6 +9,7 @@
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
 #include <vtkRenderWindow.h>
+#include <vtkSmartPointer.h>
 
 class FileWriter
 {
@@ -17,7 +18,7 @@ public:
     FileWriter();
     ~FileWriter();
     int SaveIsoSurfacePolyData(vtkPolyData *data, const char * filename);
-    vtkPolyData *ReadIsoSurfacePolyData( const char * filename);
+    vtkSmartPointer<vtkPolyData> ReadIsoSurfacePolyData( const char * filename);
     void SaveScreenShot(vtkRenderWindow *renwin, const char* filename);
 
     //void FileWriter::FileNameTimeString_MMDDHMS(char *timeName, int timeNameLength);

@@ -12,11 +12,11 @@
 #include <map>
 
 PlotViewer::PlotViewer(DataReaderFormat drf,int screenWidth, int screenHeight) :
-	Viewer(drf, screenWidth, screenHeight), m_numComponents(0) {}
+	Viewer(drf, screenWidth, screenHeight), m_numComponents(0), m_chartType(0) {}
 
 PlotViewer::PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight,
 		vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr) :
-		Viewer(drf, screenWidth, screenHeight), m_numComponents(0)
+		Viewer(drf, screenWidth, screenHeight), m_numComponents(0), m_chartType(0)
 {
 		m_arrX = xarr;
 		m_arrY = yarr;
@@ -37,7 +37,7 @@ int PlotViewer::Setup()
 	}
 
 	if (m_numComponents == 0){
-		fprintf(stdout, "PlotViewer::Setup(): Please set the number of components by calling SetNumberOfRows(int).\n");
+		fprintf(stdout, "PlotViewer::Setup(): Please set the number of components by calling PlotViewer::SetNumberOfComponents(int).\n");
 	}
 
 	m_arrX->SetName(m_nameX);
@@ -61,10 +61,10 @@ void PlotViewer::InitializeRenderer()
 	table->Update();
 	chart = vtkSmartPointer<vtkChartXY>::New();
 	view->GetScene()->AddItem(chart);
-	vtkPlot *line = chart->AddPlot(vtkChart::LINE);
-	line->SetInput(table, 0, 1);
-	line->SetColor(0, 255, 0, 255);
-	line->SetWidth(2.0);
+	vtkPlot *plot1 = chart->AddPlot(m_chartType);
+	plot1->SetInput(table, 0, 1);
+	plot1->SetColor(0, 255, 0, 255);
+	plot1->SetWidth(1.0);
 
 	view->Update();
 }
@@ -109,4 +109,9 @@ void PlotViewer::SetXName(char *str)
 void PlotViewer::SetYName(char *str)
 {
 	m_nameY = str;
+}
+
+void PlotViewer::SetChartType(int type)
+{
+	m_chartType = type;
 }

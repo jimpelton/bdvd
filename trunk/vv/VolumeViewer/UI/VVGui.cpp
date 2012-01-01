@@ -67,7 +67,7 @@ void VVGui::SetupUi(QMainWindow *MainWindow, ViewerOptions &vopts)
     setupColorSliders();
     leftVerticalLayout->addLayout(gridLayout);
     leftColorIsoFrame->setLayout(leftVerticalLayout);
-    isoSlider->setEnabled( vopts.mode == OPMODE_EXTRACT_AND_VIEW_SURFACE);
+    isoSlider->setEnabled( vopts.mode == OpMode::EXTRACT_AND_VIEW_SURFACE );
     
 
     centralWidgetHBoxLayout->addWidget(leftColorIsoFrame);

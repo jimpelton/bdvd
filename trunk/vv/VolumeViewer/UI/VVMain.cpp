@@ -20,20 +20,19 @@
 #include "VVMain.h"
 #include "VolumeViewer.h"
 #include "IsoSurfaceViewer.h"
+#include "ViewerOptions.h"
 
-#include "vtkImageViewer.h"
-#include "vtkRenderWindowInteractor.h"
-#include "vtkRenderer.h"
-#include "vtkPNGReader.h"
-#include "vtkTestUtilities.h"
+
+#include <vtkImageViewer.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkPNGReader.h>
+#include <vtkTestUtilities.h>
 
 #include <string>
 #include <sstream>
 #include <ctime>
 #include <map>
-
-//int ISO_SURFACE = 1;
-
 
 
 /*
@@ -45,22 +44,11 @@ int DEFAULT_SAVE_POLYDATA_FNAME_LENGTH = 9;
 
 char *DEFAULT_SAVE_SCREENSHOT_FNAME = "capture.png";
 
-VVMain::VVMain(DataReaderFormat readerFormat)
-{
-	viewer=NULL;
-	ViewerOptions tmpVO = {OPMODE_EXTRACT_AND_VIEW_SURFACE};
-    init(readerFormat, tmpVO);
-}
 
-VVMain::VVMain(DataReaderFormat drf, ViewerOptions vo)
+
+VVMain::VVMain(DataReaderFormat drf, ViewerOptions vo) : viewer()
 {
-	viewer = NULL;
 	init(drf, vo);
-}
-
-VVMain::VVMain(void)
-{
-	viewer=NULL;
 }
 
 
@@ -82,8 +70,8 @@ void VVMain::init(DataReaderFormat drf, ViewerOptions opts)
 
     switch(m_vo.mode)
     {
-    case OPMODE_VIEW_POLYDATA:
-    case OPMODE_EXTRACT_AND_VIEW_SURFACE:
+    case OpMode::VIEW_POLYDATA:
+    case OpMode::EXTRACT_AND_VIEW_SURFACE:
     	setup_isosurface_viewer();
     	break;
    default:

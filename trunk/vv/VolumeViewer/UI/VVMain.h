@@ -57,8 +57,7 @@ private:
     void setup_isosurface_viewer();
 
 public:
-	VVMain(void);
-    VVMain(DataReaderFormat drf);
+	//VVMain(void);
     VVMain(DataReaderFormat drv, ViewerOptions vo);
 	~VVMain(void);
         
