@@ -103,12 +103,11 @@ int PlotViewerMain::plotTriangleEdgeLength()
 
 	vtkSmartPointer<vtkDataArray> x = vtkSmartPointer<vtkDoubleArray>::New();
 	vtkSmartPointer<vtkDataArray> y = vtkSmartPointer<vtkLongArray>::New();
-	m_plotViewer->SetXArray(x);
-	m_plotViewer->SetYArray(y);
-	m_plotViewer->SetXName("edge_length");
-	m_plotViewer->SetYName("freq");
+	m_plotViewer->SetXArray(x, "edge_length");
+	plot p = {vtkChart::POINTS, 255, 0, 0, 255, "some name"};
+
+	m_plotViewer->AddYArray(y, "freq", &p);
 	m_plotViewer->SetNumComponents(bins.size());
-	m_plotViewer->SetChartType(vtkChart::POINTS);
 
 	if (!m_plotViewer->Setup()){
 		fprintf(stdout, "PlotViewerMain::TriangleEdgeLength(): Setup of the PlotViewer object failed!\n");
@@ -147,12 +146,14 @@ int PlotViewerMain::plotSurfaceAreas()
 
 	vtkSmartPointer<vtkDataArray> x = vtkSmartPointer<vtkDoubleArray>::New();
 	vtkSmartPointer<vtkDataArray> y = vtkSmartPointer<vtkLongArray>::New();
-	m_plotViewer->SetXArray(x);
-	m_plotViewer->SetYArray(y);
-	m_plotViewer->SetXName("iso");
-	m_plotViewer->SetYName("area");
+	vtkSmartPointer<vtkDataArray> y2 = vtkSmartPointer<vtkLongArray>::New();
+
+	m_plotViewer->SetXArray(x, "iso");
+	plot p =  {vtkChart::POINTS, 0, 255, 0, 255, "surface areas 1"};
+	//plot p2 = {vtkChart::POINTS, 255, 0, 0, 255, "surface areas 2"};
+	m_plotViewer->AddYArray(y, "area", &p);
+	//m_plotViewer->AddYArray(y2, "area2", &p2);
 	m_plotViewer->SetNumComponents(list.size());
-	m_plotViewer->SetChartType(vtkChart::POINTS);
 
 	if (!m_plotViewer->Setup()){
 		fprintf(stdout, "PlotViewerMain::plotSurfaceAreas(): Setup of the PlotViewer object failed!\n");

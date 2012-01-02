@@ -32,15 +32,14 @@ HEADERS += Common.h \
            UI/VVMain.h \
 	       UI/CLParser.h \
 	       UI/PlotViewerGui.h \
-		   UI/PlotViewerMain.h \
+	       UI/PlotViewerMain.h \
            Surface/SurfaceUtil.h \
            Viewer/DataReaderFormat.h \
            Viewer/IsoSurfaceViewer.h \
            Viewer/Viewer.h \
-           Viewer/PlotViewer.h \ 
-           Viewer/Viewer3D.h
-        
-
+           Viewer/PlotViewer.h \
+           Viewer/Viewer3d.h
+           
 SOURCES += File/FileWriter.cpp \
            File/ReaderFactory.cpp \
            main.cpp \
@@ -48,15 +47,9 @@ SOURCES += File/FileWriter.cpp \
            UI/VVMain.cpp \
 	       UI/CLParser.cpp \
 	       UI/PlotViewerGui.cpp \
-		   UI/PlotViewerMain.cpp \	
+	       UI/PlotViewerMain.cpp \
            Surface/SurfaceUtil.cpp \
            Viewer/IsoSurfaceViewer.cpp \
            Viewer/Viewer.cpp \
-           Viewer/PlotViewer.cpp \ 
-           Viewer/Viewer3D.cpp
-
-
-
-
-
-
+           Viewer/PlotViewer.cpp \
+           Viewer/Viewer3d.cpp

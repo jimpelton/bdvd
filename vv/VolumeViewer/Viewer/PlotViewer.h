@@ -12,6 +12,8 @@
 #include "ReaderFactory.h"
 #include "Viewer.h"
 
+
+
 #include <vtkDataArray.h>
 #include <vtkSmartPointer.h>
 #include <vtkContextView.h>
@@ -24,29 +26,44 @@
 
 #include <vtkTextWidget.h>
 
+#include <vector>
+
+struct plot{
+	int type;
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	unsigned char a;
+	char *label;
+};
+
 class PlotViewer : Viewer {
 
 private:
 
+	std::vector<vtkSmartPointer<vtkDataArray> > m_yArrays;
+
+//	const unsigned char NUM_COMPONENTS_SET = 0x01;
+//	const unsigned char ROW_VALUE_SET = 0x02;
+//	const unsigned char X_ARRAY_SET = 0x04;
+//	const unsigned char Y_ARRAY_SET = 0x08;
+//	unsigned char allComponentsSet;
+
 	vtkSmartPointer<vtkContextView> view;
 	vtkSmartPointer<vtkTable> table;
-	vtkSmartPointer<vtkDataArray> m_arrX;
-	vtkSmartPointer<vtkDataArray> m_arrY;
+
 	vtkSmartPointer<vtkChartXY> chart;
-	vtkSmartPointer<vtkPlot> line;
 	vtkSmartPointer<vtkAlgorithm> reader;
 
-	char *m_nameX;
-	char *m_nameY;
+	vtkSmartPointer<vtkDataArray> m_arrX;
+
+	std::vector<plot> m_plots;
 
 	int m_numComponents;
-	int m_chartType;
+
 
 public:
 	PlotViewer(DataReaderFormat drf, int screenWidth, int screenHeight);
-	PlotViewer(DataReaderFormat drv, int screenWidth, int screenHeight,
-			vtkSmartPointer<vtkDataArray> xarr, vtkSmartPointer<vtkDataArray> yarr);
-
 	~PlotViewer();
 
 	///////overrides from Viewer///////
@@ -58,13 +75,11 @@ public:
     vtkSmartPointer<vtkContextView> GetView() const;
     vtkSmartPointer<vtkTable> GetTable() const;
 
-    void SetXArray(vtkSmartPointer<vtkDataArray> arrX);
-    void SetYArray(vtkSmartPointer<vtkDataArray> arrY);
+    void SetXArray(vtkSmartPointer<vtkDataArray> arrX, char *arrName);
+    void AddYArray(vtkSmartPointer<vtkDataArray> arrY, char *arrName, plot *p);
     void SetNumComponents(int n);
     void SetRowValue(vtkIdType, vtkIdType, vtkVariant);
     void SetXName(char *str);
-    void SetYName(char *str);
-    void SetChartType(int t);
 
 };
 

@@ -48,8 +48,8 @@ void printUsage(char *extraMessage = NULL)
 {
     char *s = 
         "VolumeViewer Usage\n" \
-        "\tVolumeViewer [options] --polyfile <file-name>\n" \
-        "\tVolumeViewer [options] --bmpprefix <file-prefix> [extractOptions]\n" \
+        "\tVolumeViewer [options] --surface <file-name>\n" \
+        "\tVolumeViewer [options] --plots   <file-prefix> [extractOptions]\n" \
 
         "[options]:\n" \
         "\t\t[--isoval]\n" \
@@ -180,7 +180,13 @@ void parseCommandLine(int argc, char *argv[], DataReaderFormat *drf, ViewerOptio
 	}
 }
 
+void cleanup()
+{
+	if (gui != NULL)
+		delete gui;
 
+	CLParser::CleanUp();
+}
 
 int main(int argc, char* argv[])
 {
@@ -190,6 +196,8 @@ int main(int argc, char* argv[])
 
 	DataReaderFormat drf = {VV_READER_TYPE_NOT_SET, -1, -1, -1, -1, VV_BIG_ENDIAN, -1, -1, -1, 1, "unknown", "unknown"};
 	ViewerOptions viewOpts = {OpMode::EXTRACT_AND_VIEW_SURFACE, NULL};
+
+	atexit(cleanup);
 
 	parseCommandLine(argc, argv, &drf, &viewOpts);
 
@@ -205,8 +213,7 @@ int main(int argc, char* argv[])
 	gui->show();
 	app.exec();
 
-	delete gui;
-	CLParser::CleanUp();
+
 
 	return 0;
 }
