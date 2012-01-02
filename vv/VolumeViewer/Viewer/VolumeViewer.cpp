@@ -1,17 +1,18 @@
 
 
 #include "VolumeViewer.h"
+#include "Viewer3D.h"
 #include <vtkBMPReader.h>
 #include <vtkVolumeRayCastCompositeFunction.h>
 using std::string;
 
-VolumeViewer::VolumeViewer(void) : Viewer()
+VolumeViewer::VolumeViewer(void) : Viewer3D()
 {
 	assignDefaults();
 }
 
 VolumeViewer::VolumeViewer(DataReaderFormat	& drf, int screenwidth, int screenheight) : 
-	Viewer(drf, screenwidth, screenheight)
+	Viewer3D(drf, screenwidth, screenheight)
 {
 	assignDefaults();
 }
@@ -26,16 +27,12 @@ void VolumeViewer::assignDefaults()
 	volumeColorTransfer = NULL;
 	volumeScalarTransfer = NULL;
 	volumeGradTransfer = NULL;
-
-	m_keypressStyle = new KeypressInteractorStyle();
-	m_keypressStyle->SetVolumeViewer(this);
 }
 
 
 int VolumeViewer::Setup()
 {
 
-	//m_keypressStyle->SetCurrentRenderer(m_ren);
 
 	volume = vtkSmartPointer<vtkVolume>::New();
 	

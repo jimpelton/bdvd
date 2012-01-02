@@ -38,7 +38,7 @@ int IsoSurfaceViewer::Setup()
     polyDataMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     reader = ReaderFactory::GetReader(&m_readerFormat);
     if (reader == NULL){
-    	fprintf(stdout, "IsoSurfaceViewer::Setup(): Reader was NULLers :( \n");
+    	fprintf(stdout, "IsoSurfaceViewer::Setup(): Reader was NULL:( \n");
     	return SETUP_FAILURE;
     }
 
