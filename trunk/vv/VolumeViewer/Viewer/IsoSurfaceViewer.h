@@ -17,7 +17,7 @@
 #include "FileWriter.h"
 #include "ReaderFactory.h"
 
-#include "../Common.h"
+//#include "../Common.h"
 #include "../Surface/SurfaceUtil.h"
 
 #include <vtkSmartPointer.h>

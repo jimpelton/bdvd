@@ -2,8 +2,8 @@
 #ifndef VOLUMEVIEWER_H
 #define VOLUMEVIEWER_H
 
-#include "Viewer.h"
-#include "KeypressInteractorStyle.h"
+//#include "Viewer.h"
+#include "Viewer3D.h"
 
 #include <vtkSmartPointer.h>
 
@@ -27,17 +27,14 @@
 #include <vector>
 #include <string>
 
-class KeypressInteractorStyle;
 using std::vector;
 using std::string;
 
 
-class VolumeViewer : public Viewer{
+class VolumeViewer : public Viewer3D {
 
 private:
 
-	//TODO: does this actually get deleted in vtkRenderWindowInteractor.cxx, line 117/119?
-	KeypressInteractorStyle *m_keypressStyle;
 	vtkSmartPointer<vtkCallbackCommand> m_vKeyPressCallback;
 	
 	vtkSmartPointer<vtkImageAlgorithm> reader;
@@ -102,14 +99,6 @@ public:
 		overridden from viewer
 	 */
 	void InitializeRenderer();
-
-
-
-	 //int ScreenWidth() const;
-	 //void ScreenWidth(int val);
-
-	 //int ScreenHeight() const;
-	 //void ScreenHeight(int val);
 
 	 double Ambient() const;
 	 void Ambient(double val);
