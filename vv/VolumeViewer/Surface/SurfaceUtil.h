@@ -20,16 +20,15 @@
 #include <vtkPoints.h>
 #include <vtkLine.h>
 #include <vtkAlgorithmOutput.h>
-#include <vtkMarchingCubes.h>
+#include <vtkImageData.h>
 #include <vtkSmartPointer.h>
+
 
 #include <map>
 
 class SurfaceUtil
 {
 private:
-
-
 
 public:
     SurfaceUtil();

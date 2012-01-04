@@ -14,6 +14,10 @@
 
 #include "SurfaceUtil.h"
 #include "FileWriter.h"
+
+#include <vtkSmartPointer.h>
+#include <vtkMarchingCubes.h>
+
 #include <sstream>
 
 SurfaceUtil::SurfaceUtil()
@@ -123,22 +127,21 @@ vtkSmartPointer<vtkPolyData> SurfaceUtil::ExtractSingleIsoSurface(vtkAlgorithmOu
  */
 int SurfaceUtil::BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData, int *ivals, int ivalsLength, char *fname)
 {
+	vtkSmartPointer<vtkMarchingCubes> mCubesExtractor = vtkSmartPointer<vtkMarchingCubes>::New();
+	mCubesExtractor->SetInputConnection(volData);
 	FileWriter f;
 	int curIsoVal = 0;
-	int i;
-	for (i = 0; i < ivalsLength; i++)
+	for (int i = 0; i < ivalsLength; i++)
 	{
 		curIsoVal = ivals[i];
-		vtkSmartPointer<vtkPolyData> pd =
-				SurfaceUtil::ExtractSingleIsoSurface(volData, curIsoVal, 0);
+		fprintf(stdout, "Processing iso value: %d", curIsoVal);
 
-		std::stringstream ss;
-		ss << "iso" << curIsoVal << "_" << fname;
-		std::string s = ss.str();
-		f.SaveIsoSurfacePolyData(pd, fname);
+		mCubesExtractor->SetValue(0, curIsoVal);
+		mCubesExtractor->Update();
+
+		f.SaveIsoSurfacePolyData(mCubesExtractor->GetOutput(),fname);
 		fprintf(stdout, "\nExtracted and saved %s\n", fname);
 	}
-	return i;
 
 }
 
