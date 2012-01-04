@@ -11,8 +11,8 @@
 #include <vtkVariant.h>
 #include <map>
 
-PlotViewer::PlotViewer(DataReaderFormat drf,int screenWidth, int screenHeight) :
-	Viewer(drf, screenWidth, screenHeight), m_numComponents(0)
+PlotViewer::PlotViewer(DataReaderFormat dummy,int screenWidth, int screenHeight) :
+	Viewer(dummy, screenWidth, screenHeight), m_numComponents(0)
 {
 	//allComponentsSet = 0x00;
 }
