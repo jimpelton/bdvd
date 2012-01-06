@@ -68,7 +68,6 @@ void FileWriter::SaveScreenShot(vtkRenderWindow *renwin, const char *fileName)
 
 	  windowToImageFilter->Delete();
 	  writer->Delete();
-
 }
 
 
