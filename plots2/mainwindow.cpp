@@ -36,12 +36,13 @@ struct rgba{
     unsigned char a;
 };
 
-const rgba colors[] = { {255, 0, 0, 255},
-                         {0, 255, 0, 255},
-                         {0, 0, 255, 255},
-                         {255,0,255, 255},
-                         {0,255,255, 255},
-                         {255,255,0, 255}
+const rgba colors[] =
+{       {255, 0, 0, 255},
+		{0, 255, 0, 255},
+		{0, 0, 255, 255},
+		{255,0,255, 255},
+		{0,255,255, 255},
+		{255,255,0, 255}
 };
 
 
@@ -59,9 +60,6 @@ MainWindow::MainWindow(vector<QString*>* dirs, vector<string>* lgnd, QWidget *pa
 
     setup();
 }
-
-
-
 
 MainWindow::~MainWindow()
 {
