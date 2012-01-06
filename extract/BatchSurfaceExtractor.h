@@ -25,10 +25,11 @@ class BatchSurfaceExtractor {
 private:
 
 	DataReaderFormat m_drf;
-	int insideOut;
-	int * m_isoVals;
+	int  *m_isoVals;
 	int   m_numIsoVals;
 	char *m_outpath;
+	bool m_savedata;
+	bool m_noextract;
 
 	vtkSmartPointer<vtkBMPReader> reader;
 	vtkSmartPointer<vtkMarchingCubes> mCubesExtractor;
@@ -39,12 +40,14 @@ private:
 	void clip();
 
 public:
-    BatchSurfaceExtractor(DataReaderFormat drf, int *m_isoVals, int m_numIsoVals, char *outpath);
+    BatchSurfaceExtractor(DataReaderFormat drf,
+    		int *m_isoVals, int m_numIsoVals, char *outpath, bool noExtract);
 	virtual ~BatchSurfaceExtractor();
 
 
 public:
 	void DoExtract();
+	void DoCalcs();
 
 };
 

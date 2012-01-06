@@ -23,42 +23,51 @@ DataReaderFormat drf ;
 int isostart;
 int isoend;
 bool ready;
+bool noextract;
 char *outpath;
+char *process;
 
 void parse_cmd_line(int argc, char *argv[])
 {
 	ready = true;
 	CLParser::Init(argc, argv);
-	if (!CLParser::ParseCL_n("dimx",      &(drf.dimX)))       { cout << "Need dimX\n";      ready=false; }
-	if (!CLParser::ParseCL_n("dimy",      &(drf.dimY)))       { cout << "Need dimY\n";      ready=false; }
-	if (!CLParser::ParseCL_n("imgstart",  &(drf.imgRngStart))){ cout << "Need imgstart\n";  ready=false; }
-	if (!CLParser::ParseCL_n("imgend",    &(drf.imgRngEnd)))  { cout << "Need imgend\n";    ready=false; }
-	if (!CLParser::ParseCL_s("bmpprefix", &(drf.filePrefix))) { cout << "Need bmpprefix\n"; ready=false; }
-	if (!CLParser::ParseCL_s("fileprefix",&(drf.fileName)))   { cout << "Need fileprefix\n";ready=false; }
-	if (!CLParser::ParseCL_n("isostart",  &isostart))         { cout << "Need isostart\n";  ready=false; }
-	if (!CLParser::ParseCL_n("isoend",    &isoend))           { cout << "Need isoend\n";    ready=false; }
-	if (!CLParser::ParseCL_s("outpath",   &outpath))          { cout << "Need outpath\n";   ready=false; }
 
-	if (CLParser::ParseCL_flag("saveData"))
+	if (CLParser::ParseCL_flag("noextract"))
+	{
+		if (!CLParser::ParseCL_s("inpath",    &(drf.filePrefix))) { cout << "Need inpath\n";     ready=false; }
+		if (!CLParser::ParseCL_s("process",   &process))         { cout << "Need process\n";    ready=false; }
+	}
+	else
 	{
 
+		if (!CLParser::ParseCL_n("dimx",      &(drf.dimX)))       { cout << "Need dimX\n";      ready=false; }
+		if (!CLParser::ParseCL_n("dimy",      &(drf.dimY)))       { cout << "Need dimY\n";      ready=false; }
+		if (!CLParser::ParseCL_n("imgstart",  &(drf.imgRngStart))){ cout << "Need imgstart\n";  ready=false; }
+		if (!CLParser::ParseCL_n("imgend",    &(drf.imgRngEnd)))  { cout << "Need imgend\n";    ready=false; }
+		if (!CLParser::ParseCL_s("inpath", &(drf.filePrefix)))    { cout << "Need inpath\n";    ready=false; }
+		if (!CLParser::ParseCL_s("fileprefix",&(drf.fileName)))   { cout << "Need fileprefix\n";ready=false; }
+		if (!CLParser::ParseCL_n("isostart",  &isostart))         { cout << "Need isostart\n";  ready=false; }
+		if (!CLParser::ParseCL_n("isoend",    &isoend))           { cout << "Need isoend\n";    ready=false; }
+		if (!CLParser::ParseCL_s("outpath",   &outpath))          { cout << "Need outpath\n";   ready=false; }
+
+		if (isoend < isostart){ cout << "isoend value < isostart value! Fix it please.\n"; ready=false; }
 	}
 
-	if (isoend < isostart){ cout << "isoend value < isostart value! Fix it please.\n"; ready=false; }
+	cout << "These options are provided:\n";
+	cout << "\t noextract: "   << ( noextract ? "True" : "False" ) << endl;
+	cout << "\t dimX: "        << drf.dimX << endl;
+	cout << "\t dimY: "        << drf.dimY<< endl;
+	cout << "\t imgstart: "    << drf.imgRngStart << endl;
+	cout << "\t imgend: "      << drf.imgRngEnd << endl;
+	cout << "\t bmpprefix: "   << drf.filePrefix << endl;
+	cout << "\t fileprefix: "  << drf.fileName << endl;
+	cout << "\t isostart: "    << isostart << endl;
+	cout << "\t isoend: "      << isoend << endl;
+	cout << "\t outpath: "     << outpath << endl;
 
-	if (ready){
-		cout << "Using these options:\n";
-		cout << "\t dimX: "        << drf.dimX << endl;
-		cout << "\t dimY: "        << drf.dimY<< endl;
-		cout << "\t imgstart: "    << drf.imgRngStart << endl;
-		cout << "\t imgend: "      << drf.imgRngEnd << endl;
-		cout << "\t bmpprefix: "   << drf.filePrefix << endl;
-		cout << "\t fileprefix: "  << drf.fileName << endl;
-		cout << "\t isostart: "    << isostart << endl;
-		cout << "\t isoend: "      << isoend << endl;
-		cout << "\t ready: "       << ready << endl;
-		cout << "\t outpath: "     << outpath << endl;
-	}
+
+	cout << endl << "Ready: " << ( ready ? "True" : "False" ) << endl;
+
 }
 
 int main(int argc, char *argv[])
@@ -80,12 +89,10 @@ int main(int argc, char *argv[])
     	ivalues[i-isostart] = i;
     }
     int numiv = sizeof(ivalues)/sizeof(int);
-    BatchSurfaceExtractor bse(drf, ivalues, numiv, outpath);
+    BatchSurfaceExtractor bse(drf, ivalues, numiv, outpath, noextract);
 
 
     bse.DoExtract();
-
-
 
     return 0;
 }
