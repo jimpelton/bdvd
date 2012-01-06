@@ -39,7 +39,7 @@ public:
     static double SurfaceArea(vtkPolyData *);
     static double TriangleAvgEdgeLength(vtkPolyData* surface, std::map<double, long> *bins = NULL);
     static vtkSmartPointer<vtkPolyData> ExtractSingleIsoSurface(vtkAlgorithmOutput *volData, int ival, int normals);
-    static int BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData, int *ivals, int ivalsLength, char *fname);
+    static int BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData, int *ivals, int ivalsLength, char *fname, char *path);
 };
 
 #endif // SURFACEUTIL_H
