@@ -11,7 +11,7 @@
 #include <DataReaderFormat.h>
 #include <CLParser.h>
 
-#include <cstdlib>
+//#include <stdlib>
 #include <iostream>
 #include <string>
 
@@ -23,19 +23,27 @@ DataReaderFormat drf ;
 int isostart;
 int isoend;
 bool ready;
-bool noextract;
+bool noextract = false;
 char *outpath;
+//char *outfile;
 char *process;
 
 void parse_cmd_line(int argc, char *argv[])
 {
 	ready = true;
-	CLParser::Init(argc, argv);
 
+	drf.filePrefix = "";
+	drf.fileName = "";
+	outpath = "";
+	process = "";
+
+	CLParser::Init(argc, argv);
 	if (CLParser::ParseCL_flag("noextract"))
 	{
+		noextract = true;
 		if (!CLParser::ParseCL_s("inpath",    &(drf.filePrefix))) { cout << "Need inpath\n";     ready=false; }
-		if (!CLParser::ParseCL_s("process",   &process))         { cout << "Need process\n";    ready=false; }
+		if (!CLParser::ParseCL_s("process",   &process))          { cout << "Need process\n";    ready=false; }
+		if (!CLParser::ParseCL_s("outfile",   &outpath))          { cout << "Need outfile\n";    ready=false; }
 	}
 	else
 	{
@@ -53,17 +61,18 @@ void parse_cmd_line(int argc, char *argv[])
 		if (isoend < isostart){ cout << "isoend value < isostart value! Fix it please.\n"; ready=false; }
 	}
 
-	cout << "These options are provided:\n";
-	cout << "\t noextract: "   << ( noextract ? "True" : "False" ) << endl;
-	cout << "\t dimX: "        << drf.dimX << endl;
-	cout << "\t dimY: "        << drf.dimY<< endl;
-	cout << "\t imgstart: "    << drf.imgRngStart << endl;
-	cout << "\t imgend: "      << drf.imgRngEnd << endl;
-	cout << "\t bmpprefix: "   << drf.filePrefix << endl;
-	cout << "\t fileprefix: "  << drf.fileName << endl;
-	cout << "\t isostart: "    << isostart << endl;
-	cout << "\t isoend: "      << isoend << endl;
-	cout << "\t outpath: "     << outpath << endl;
+	cout << "These options are provided:\n"
+	 << "\t noextract: "   << ( noextract ? "True" : "False" ) << endl
+	 << "\t dimX: "        << drf.dimX << endl
+	 << "\t dimY: "        << drf.dimY<< endl
+	 << "\t imgstart: "    << drf.imgRngStart << endl
+	 << "\t imgend: "      << drf.imgRngEnd << endl
+	 << "\t bmpprefix: "   << drf.filePrefix << endl
+	 << "\t fileprefix: "  << drf.fileName << endl
+	 << "\t isostart: "    << isostart << endl
+	 << "\t isoend: "      << isoend << endl
+	 << "\t outpath: "     << outpath << endl
+	 << "\t process: "     << process << endl;
 
 
 	cout << endl << "Ready: " << ( ready ? "True" : "False" ) << endl;
@@ -80,20 +89,26 @@ int main(int argc, char *argv[])
 
 	parse_cmd_line(argc, argv);
 
-	if (!ready){ cout << "\nCheck yo args foo!\n"; exit(0); }
+	if (!ready)
+	{
+		cout << "\nCheck yo args foo!\n";
+	}
+	else
+	{
+
+		int ivalues[isoend-isostart];
+		for (int i = isostart; i <= isoend; ++i)
+		{
+			ivalues[i-isostart] = i;
+		}
+		int numiv = sizeof(ivalues)/sizeof(int);
+		BatchSurfaceExtractor bse(drf, ivalues, numiv, outpath, noextract);
 
 
-    int ivalues[isoend-isostart];
-    for (int i = isostart; i <= isoend; ++i)
-    {
-    	ivalues[i-isostart] = i;
-    }
-    int numiv = sizeof(ivalues)/sizeof(int);
-    BatchSurfaceExtractor bse(drf, ivalues, numiv, outpath, noextract);
+		bse.DoExtract();
+	}
 
-
-    bse.DoExtract();
-
+    cout << endl;
     return 0;
 }
 
