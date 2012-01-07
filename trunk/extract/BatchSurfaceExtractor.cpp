@@ -11,13 +11,12 @@
 #include <SurfaceUtil.h>
 
 #include <vtkPolyDataReader.h>
-#include <vtkDataObjectWriter.h>
-#include <vtkFieldData.h>
-#include <vtkDoubleArray.h>
-
 
 #include <string>
 #include <sstream>
+#include <iostream>
+#include <fstream>
+
 
 #include <QDir>
 #include <QFileInfoList>
@@ -40,9 +39,8 @@ BatchSurfaceExtractor::BatchSurfaceExtractor(DataReaderFormat drf,
 
 	if (m_noextract)
 	{
-		strstream ss;
-		ss << m_drf.filePrefix << "/" << m_drf.fileName;
-		strFileName = ss.str();
+
+		strFileName = outpath;
 		DoCalcs();
 	}
 	else
@@ -74,43 +72,19 @@ void BatchSurfaceExtractor::makeReader()
 
 void BatchSurfaceExtractor::DoExtract()
 {
-
-	if (!m_noextract){
-		makeReader();
-		SurfaceUtil::BatchExtractAndSaveIsoSurface(
-				reader->GetOutputPort(),
-				m_isoVals, m_numIsoVals,
-				m_drf.fileName, m_outpath );
-	}else{
-
-		DoCalcs();
-
-	}
+	makeReader();
+	SurfaceUtil::BatchExtractAndSaveIsoSurface(
+			reader->GetOutputPort(),
+			m_isoVals, m_numIsoVals,
+			m_drf.fileName, m_outpath );
 }
 
 void BatchSurfaceExtractor::DoCalcs()
 {
+	ofstream outfile(strFileName.c_str());
 
 	vtkSmartPointer<vtkPolyDataReader> pdr =
 			vtkSmartPointer<vtkPolyDataReader>::New();
-
-	vtkSmartPointer<vtkFieldData> fieldData =
-			vtkSmartPointer<vtkFieldData>::New();
-
-	vtkSmartPointer<vtkDataObjectWriter> writer =
-			vtkSmartPointer<vtkDataObjectWriter>::New();
-	writer->SetFileName(strFileName.c_str());
-
-
-	vtkSmartPointer<vtkDoubleArray> isoarray =
-			vtkSmartPointer<vtkDoubleArray>::New();
-	isoarray->SetName("isovalues");
-
-	vtkSmartPointer<vtkDoubleArray> doublearray =
-			vtkSmartPointer<vtkDoubleArray>::New();
-	doublearray->SetName("avgEdgeLength");
-
-
 
 	QDir dir;
 	dir.setPath(QString(m_drf.filePrefix));
@@ -124,8 +98,6 @@ void BatchSurfaceExtractor::DoCalcs()
 
 	QFileInfoList flist = dir.entryInfoList();
 
-	fieldData->SetNumberOfTuples(flist.size());
-	double tuple[2];
 	QRegExp regex("^iso([0-9]+)");
 	for (int i=0; i<flist.size(); ++i)
 	{
@@ -154,19 +126,20 @@ void BatchSurfaceExtractor::DoCalcs()
 			continue;
 		}
 
-		pdr->SetFileName(finfo.absolutePath().toAscii().data());
+		pdr->SetFileName(finfo.absoluteFilePath().toAscii().data());
 		pdr->Update();
 		if (!pdr->IsFilePolyData()){
 			fprintf(stdout, "%s is not a polydata file, skipping.\n", name.toAscii().data());
 			continue;
 		}
 
+
 		double avgEdgeLength = SurfaceUtil::TriangleAvgEdgeLength(pdr->GetOutput());
-		tuple[0] = nIso;
-		tuple[1] = avgEdgeLength;
-		fieldData->InsertNextTuple(tuple);
+		outfile << nIso << ":" << avgEdgeLength << "\n";
+		outfile.flush();
 	}
 
+	outfile.close();
 
 
 }
