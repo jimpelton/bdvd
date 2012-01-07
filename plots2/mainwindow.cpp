@@ -1,3 +1,6 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
 #include <vtkRenderer.h>
 #include <vtkIntArray.h>
 #include <vtkDoubleArray.h>
@@ -21,8 +24,11 @@
 #include <SurfaceUtil.h>
 #include <FileWriter.h>
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+
+
+#include <iostream>
+#include <fstream>
+//#include <string>
 
 vector<QString*> *directory;
 vector<string> *legendtexts;
@@ -49,9 +55,10 @@ const rgba colors[] =
 #define X_AXIS 1
 #define Y_AXIS 0
 
-MainWindow::MainWindow(vector<QString*>* dirs, vector<string>* lgnd, QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(vector<QString*>* dirs, vector<string>* lgnd, QWidget *parent)
+	: QMainWindow(parent)
+	, ui(new Ui::MainWindow)
+	, source(TEXT_FILE)
 {
     ui->setupUi(this);
 
@@ -70,7 +77,82 @@ MainWindow::~MainWindow()
 
 void MainWindow::setup()
 {
+	plotFromTextFiles();
+}
 
+void MainWindow::plotFromTextFiles()
+{
+
+
+	VTKCREATE(vtkContextView, view);
+	view->SetInteractor(ui->widget->GetInteractor());
+	ui->widget->SetRenderWindow(view->GetRenderWindow());
+	vtkSmartPointer<vtkChartXY> chart = vtkSmartPointer<vtkChartXY>::New();
+	view->GetScene()->AddItem(chart);
+
+	VTKCREATE(vtkTable, table);
+	VTKCREATE(vtkIntArray, arrX);
+	arrX->SetName("ISO Values");
+	table->AddColumn(arrX);
+
+	for (size_t i = 0; i < directory->size(); ++i)
+	{
+		VTKCREATE(vtkDoubleArray, arrArea);
+		arrArea->SetName(legendtexts->at(i).c_str());
+		table->AddColumn(arrArea);
+	}
+
+	int longestFile = 0;
+	const int NUMLINES = 205;
+	fprintf(stdout, "You're using a hardcoded value for NUMLINES: %d, @%s:%d.", NUMLINES, __FILE__, __LINE__);
+	table->SetNumberOfRows(NUMLINES);
+    for (size_t dcount = 0; dcount < directory->size(); dcount++)
+    {
+    	fprintf(stdout, "%d: Begining directory: %s\n",
+    			dcount, directory->at(dcount)->toAscii().data());
+    	ifstream infile(directory->at(dcount)->toAscii().data());
+
+    	int numLines = 0;
+    	while (!infile.eof()){
+    		string strIsoValue;
+    		string strDataValue;
+    		getline(infile, strIsoValue, ':');
+    		getline(infile,strDataValue);
+
+    		//fprintf(stdout, "iso: %s \t data: %s\n", strIsoValue.c_str(), strDataValue.c_str());
+
+    		if (numLines >= NUMLINES){
+    			fprintf(stdout, "Ran out of space in the arrays. Continuing to next file.\n");
+    			break;
+    		}
+    		table->SetValue(numLines, dcount+1, atof(strDataValue.c_str()));
+    		table->SetValue(numLines, 0, atoi(strIsoValue.c_str()));
+    		fprintf(stdout, "[%d] iso: %d \t data: %f\n", numLines, atoi(strIsoValue.c_str()), atof(strDataValue.c_str()));
+    		numLines++;
+    	}
+    	longestFile = (numLines > longestFile) ? numLines : longestFile;
+    	table->Update();
+    	vtkPlot *line = chart->AddPlot(vtkChart::LINE);
+    	line->SetInput(table, 0, dcount+1);
+    	line->SetColor(colors[dcount].r, colors[dcount].g, colors[dcount].b, colors[dcount].a);
+    	infile.close();
+    }
+
+
+    chart->SetShowLegend(true);
+    chart->GetLegend()->SetInline(false);
+    chart->GetLegend()->SetHorizontalAlignment(vtkChartLegend::RIGHT);
+    chart->GetLegend()->SetVerticalAlignment(vtkChartLegend::TOP);
+    chart->GetLegend()->GetLabelProperties()->SetFontFamilyToTimes();
+    chart->GetAxis(X_AXIS)->SetTitle("Iso Value");
+    chart->GetAxis(Y_AXIS)->SetTitle("Avg. Edge Length");
+    chart->SetTitle(title);
+
+    view->Update();
+}
+
+void MainWindow::plotFromPolyFiles()
+{
     VTKCREATE(vtkContextView, view);
     view->SetInteractor(ui->widget->GetInteractor());
     ui->widget->SetRenderWindow(view->GetRenderWindow());
@@ -168,3 +250,5 @@ QFileInfoList MainWindow::fileNames(QString *d)
 
     return dir.entryInfoList();
 }
+
+
