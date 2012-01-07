@@ -34,14 +34,22 @@ public:
     //explicit MainWindow( QWidget *parent = 0);
     ~MainWindow();
 
+    enum Sources { TEXT_FILE, POLYDATA };
+
 private:
     Ui::MainWindow *ui;
+
+    int source;
 
     void setup();
     QFileInfoList fileNames(QString *d);
     double SurfaceArea(vtkPolyData *);
     void textstuff(vtkContextView*);
     void legendstuff(vtkContextView *cv);
+    void readTextFile(double *);
+    void plotFromTextFiles();
+    void plotFromPolyFiles();
+
 };
 
 #endif // MAINWINDOW_H
