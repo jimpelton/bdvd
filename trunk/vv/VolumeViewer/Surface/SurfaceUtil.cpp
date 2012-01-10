@@ -18,6 +18,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkMarchingCubes.h>
 
+
 #include <sstream>
 
 SurfaceUtil::SurfaceUtil()
@@ -68,10 +69,13 @@ double SurfaceUtil::TriangleAvgEdgeLength(vtkPolyData *pd, std::map<double, long
 
 	return avgLength / (double)numCells;
 }
+//double SurfaceUtil::TriangleAvgEdgeLength(vtkPolyData *pd) { return TriangleAvgEdgeLengthBinned(pd, NULL); }
+
 
 /**
  * Adds up the triangle surface areas for the given vtkPolyData. If
  * a non-triangle cell is encountered the method returns -1.0;
+ *
  * @param pd the polydata to calc the surface area of.
  * @return the surface area as a double, or -1.0 on error.
  */
@@ -97,6 +101,27 @@ double SurfaceUtil::SurfaceArea(vtkPolyData *pd)
 	return totArea;
 }
 
+
+/**
+ * Use a vtkPolyDataConnectivityFilter to extract the number of connected regions
+ * for surface.
+ *
+ * Even though the number of connected regions is always an integral value,
+ * a double is returned in an effort to keep the interface similar to other metrics functions
+ * in SurfaceUtil. This might be useful if using function pointers to set the type of metric to
+ * calculate.
+ *
+ * @param surface The polydata to process.
+ * @return The number of connected regions as a double (will be a whole number however).
+ */
+double SurfaceUtil::NumOfConnectedComponents(vtkPolyData *surface)
+{
+	vtkSmartPointer<vtkPolyDataConnectivityFilter> filter = vtkSmartPointer<vtkPolyDataConnectivityFilter>::New();
+	filter->SetInput(surface);
+	filter->Update();
+	int regions = filter->GetNumberOfExtractedRegions();
+	return regions;
+}
 
 /**
  * Does what the name suggests.
@@ -151,7 +176,7 @@ int SurfaceUtil::BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData,
 		f.SaveIsoSurfacePolyData(mCubesExtractor->GetOutput(), ss.str().c_str());
 		fprintf(stdout, "\nExtracted and saved %s\n", ss.str().c_str());
 	}
-
 }
+
 
 

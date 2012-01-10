@@ -23,7 +23,7 @@ HEADERS += CLParser.h \
            UIMain.h \ 
            VVGui.h \
            VVMain.h \
-	   Common.h
+	        Common.h
 		
 
 SOURCES += main.cpp \

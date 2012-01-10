@@ -79,6 +79,7 @@ void BatchSurfaceExtractor::DoExtract()
 			m_drf.fileName, m_outpath );
 }
 
+//TODO: change to pure stl and move to vv.
 void BatchSurfaceExtractor::DoCalcs()
 {
 	ofstream outfile(strFileName.c_str());
@@ -134,8 +135,9 @@ void BatchSurfaceExtractor::DoCalcs()
 		}
 
 
-		double avgEdgeLength = SurfaceUtil::TriangleAvgEdgeLength(pdr->GetOutput());
-		outfile << nIso << ":" << avgEdgeLength << "\n";
+		//double avgEdgeLength = SurfaceUtil::TriangleAvgEdgeLength(pdr->GetOutput());
+		double connectedComps = SurfaceUtil::NumOfConnectedComponents(pdr->GetOutput());
+		outfile << nIso << ":" << connectedComps << "\n";
 		outfile.flush();
 	}
 
