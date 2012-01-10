@@ -42,7 +42,7 @@ void parse_cmd_line(int argc, char *argv[])
 	{
 		noextract = true;
 		if (!CLParser::ParseCL_s("inpath",    &(drf.filePrefix))) { cout << "Need inpath\n";     ready=false; }
-		if (!CLParser::ParseCL_s("process",   &process))          { cout << "Need process\n";    ready=false; }
+		if (!CLParser::ParseCL_s("process",   &process))          { /*cout << "Need process\n";    ready=false;*/ }
 		if (!CLParser::ParseCL_s("outfile",   &outpath))          { cout << "Need outfile\n";    ready=false; }
 	}
 	else

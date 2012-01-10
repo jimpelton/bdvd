@@ -22,6 +22,7 @@
 #include <vtkAlgorithmOutput.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
+#include <vtkPolyDataConnectivityFilter.h>
 
 
 #include <map>
@@ -38,6 +39,7 @@ public:
     //static void CellArray(vtkPolyData *);
     static double SurfaceArea(vtkPolyData *);
     static double TriangleAvgEdgeLength(vtkPolyData* surface, std::map<double, long> *bins = NULL);
+    static double NumOfConnectedComponents(vtkPolyData *surface);
     static vtkSmartPointer<vtkPolyData> ExtractSingleIsoSurface(vtkAlgorithmOutput *volData, int ival, int normals);
     static int BatchExtractAndSaveIsoSurface(vtkAlgorithmOutput *volData,
     		int *ivals, int ivalsLength,

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <SurfaceUtil.h>
+#include <FileWriter.h>
+
 #include <vtkRenderer.h>
 #include <vtkIntArray.h>
 #include <vtkDoubleArray.h>
@@ -21,8 +24,7 @@
 #include <QFileInfoList>
 #include <QFileInfo>
 
-#include <SurfaceUtil.h>
-#include <FileWriter.h>
+
 
 
 
@@ -103,8 +105,8 @@ void MainWindow::plotFromTextFiles()
 	}
 
 	int longestFile = 0;
-	const int NUMLINES = 205;
-	fprintf(stdout, "You're using a hardcoded value for NUMLINES: %d, @%s:%d.", NUMLINES, __FILE__, __LINE__);
+	const int NUMLINES = 204;
+	fprintf(stdout, "You're using a hardcoded value for NUMLINES: %d, @%s:%d.\n", NUMLINES, __FILE__, __LINE__);
 	table->SetNumberOfRows(NUMLINES);
     for (size_t dcount = 0; dcount < directory->size(); dcount++)
     {
@@ -118,8 +120,6 @@ void MainWindow::plotFromTextFiles()
     		string strDataValue;
     		getline(infile, strIsoValue, ':');
     		getline(infile,strDataValue);
-
-    		//fprintf(stdout, "iso: %s \t data: %s\n", strIsoValue.c_str(), strDataValue.c_str());
 
     		if (numLines >= NUMLINES){
     			fprintf(stdout, "Ran out of space in the arrays. Continuing to next file.\n");

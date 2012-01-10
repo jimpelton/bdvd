@@ -11,13 +11,18 @@ TEMPLATE = app
 
 INCLUDEPATH += /usr/local/include/vtk-5.8/ \
                ../vv/VolumeViewer/Surface/ \
-               ../vv/VolumeViewer/File/ \
+               ../vv/VolumeViewer/File/    \ 
+               ../vv/VolumeViewer/Util     \
+               ../vv/VolumeViewer/Viewer
                
 
 LIBS += -L/usr/local/lib/vtk-5.8/ -L../vv/Debug/ \
         -lQVTK \
         -lQtCore \
         -lQtGui \
+        -lvtksys \
+        -lvtkCommon \
+        -lvtkIO \
         -lvtkCharts \
         -lvv
         
